@@ -103,6 +103,15 @@ class Turn(Base):
     created_at: Mapped[str] = mapped_column(String, default=now)
 
 
+class RuntimeSecret(Base):
+    """Encrypted transport state; never narrative canon or portable backup data."""
+    __tablename__ = 'runtime_secrets'
+    name: Mapped[str] = mapped_column(String, primary_key=True)
+    host_id: Mapped[str] = mapped_column(String)
+    sealed: Mapped[str] = mapped_column(Text)
+    revision: Mapped[int] = mapped_column(Integer, default=1)
+
+
 class BridgeGrant(Base):
     """Transport authorization, deliberately excluded from portable canon backups."""
     __tablename__ = 'bridge_grants'
@@ -199,6 +208,7 @@ class Database:
             # Sanitize only the destination and erase freed credential pages.
             output.execute('PRAGMA secure_delete=ON')
             output.execute('DELETE FROM bridge_grants')
+            output.execute('DELETE FROM runtime_secrets')
             output.commit()
             output.execute('VACUUM')
             # The copied header retains WAL mode. Flush the sanitized state into

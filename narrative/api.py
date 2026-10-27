@@ -19,6 +19,7 @@ from .service import Engine, DomainError, serialize
 from .providers import configured_provider
 from .narration import NarrationCoordinator
 from .chatgpt_plan import ChatGPTPlanNarrator, mount_plan_routes
+from .self_hosted_plan import SelfHostedPlanNarrator
 from .security import CloudAccess, LoginLimiter, COOKIE
 from .remote_bridge import RemoteBridge, BRIDGE_PATHS, MAX_BRIDGE_BODY, mount_routes
 
@@ -64,14 +65,24 @@ class Login(Strict):
     password: str = Field(min_length=1, max_length=1024)
 
 
-def create_app(db_path='data/canon.db', provider=None, access: CloudAccess | None = None):
+def create_app(db_path='data/canon.db', provider=None, access: CloudAccess | None = None, self_hosted_plan=False):
     app = FastAPI(title='Multimundo · API local', version='0.1.0', description='API de administración local de confianza. No exponer a Internet sin autenticación y autorización.')
     if access and isinstance(provider, ChatGPTPlanNarrator):
         raise ValueError("La conexión personal local no se puede publicar como servidor remoto sin una integración autorizada.")
+    if (self_hosted_plan or isinstance(provider, SelfHostedPlanNarrator)) and not access:
+        raise ValueError('El narrador del servidor requiere autenticación privada y HTTPS.')
+    if self_hosted_plan and provider is not None:
+        raise ValueError('El modo personal del servidor no admite otro proveedor alternativo.')
+    if isinstance(provider, SelfHostedPlanNarrator) and provider.origin != access.public_url:
+        raise ValueError('El narrador no corresponde al origen de esta instalación.')
     db = Database(db_path)
     engine = Engine(db)
     csrf = secrets.token_urlsafe(32)
-    narrator = provider or configured_provider()
+    if self_hosted_plan:
+        from .runtime_credentials import RuntimeCredentialStore
+        narrator = SelfHostedPlanNarrator(RuntimeCredentialStore(db, access.secret), access.public_url)
+    else:
+        narrator = provider or configured_provider()
     narration = NarrationCoordinator(engine, narrator)
     app.state.engine, app.state.db = engine, db
     limiter = LoginLimiter()

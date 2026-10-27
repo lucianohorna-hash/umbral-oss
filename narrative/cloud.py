@@ -19,4 +19,11 @@ def from_environment():
     if url.query.get('sslmode') not in ['require', 'verify-ca', 'verify-full']:
         raise ValueError('La conexión de nube requiere TLS: añade sslmode=require o verificación más estricta.')
     access = CloudAccess.build(public_url, password, secret)
+    personal = os.getenv('NARRATIVE_PERSONAL_OSS_PLAN', '')
+    if personal not in ('', 'true'):
+        raise ValueError('NARRATIVE_PERSONAL_OSS_PLAN solo admite true o ausencia de configuración.')
+    if personal:
+        if any(os.getenv(key) for key in ('NARRATIVE_AI_BASE_URL', 'NARRATIVE_AI_MODEL', 'NARRATIVE_AI_API_KEY')):
+            raise ValueError('El modo personal OSS solo usa el plan autorizado, sin proveedor alternativo.')
+        return create_app(database, access=access, self_hosted_plan=True)
     return create_app(database, access=access)

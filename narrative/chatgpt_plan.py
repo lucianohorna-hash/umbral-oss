@@ -81,7 +81,28 @@ class ChatGPTPlanNarrator:
         with self.lock:
             return dict(available=True, connected=bool(self.profile.get('access_token')),
                 account=self.profile.get('email', ''), model=self.profile.get('model', ''),
-                message='Uso personal local. Consume los límites autorizados de tu plan; sin respaldo automático de pago.')
+                message='La sesión se preparó para el servidor; vuelve a autorizar si necesitas otra sesión local.' if self.profile.get('moved_to_host') else
+                'Uso personal local. Consume los límites autorizados de tu plan; sin respaldo automático de pago.')
+
+    def prepare_handoff(self, descriptor, target_origin):
+        from .plan_handoff import seal, origin, _header
+        with self.lock:
+            prior = self.profile.get('handoff_packet')
+            if prior:
+                try:
+                    if _header(prior) == _header(descriptor) and prior['target_origin'] == origin(target_origin):
+                        return json.loads(json.dumps(prior))
+                except Exception:
+                    pass
+                raise ValueError('Ya hay un traslado preparado. Recupera su mismo paquete o vuelve a autorizar una conexión local.')
+            packet = seal(self.profile, descriptor, target_origin)
+            # Relinquish refresh ownership before delivering the encrypted packet.
+            # No plaintext credential export is written to disk or sent to the browser.
+            self.profile = {key: self.profile[key] for key in ('host_id','client_id','subject','email','model') if key in self.profile}
+            self.profile['moved_to_host'] = descriptor['host_id']
+            self.profile['handoff_packet'] = packet
+            self._save()
+            return packet
 
     def begin(self, origin):
         parsed = urlsplit(origin)
@@ -251,7 +272,9 @@ def mount_plan_routes(app, narrator, cloud=False):
     from fastapi.responses import HTMLResponse
     from pydantic import BaseModel, ConfigDict
     from .service import DomainError
-    enabled = isinstance(narrator, ChatGPTPlanNarrator) and not cloud
+    from .self_hosted_plan import SelfHostedPlanNarrator
+    remote = isinstance(narrator, SelfHostedPlanNarrator)
+    enabled = (isinstance(narrator, ChatGPTPlanNarrator) and not cloud) or (remote and cloud)
 
     def require():
         if not enabled:
@@ -261,6 +284,15 @@ def mount_plan_routes(app, narrator, cloud=False):
         model_config = ConfigDict(extra='forbid')
         model: str
 
+    class HandoffInput(BaseModel):
+        model_config = ConfigDict(extra='forbid')
+        descriptor: dict
+        target_origin: str
+
+    class ImportHandoff(BaseModel):
+        model_config = ConfigDict(extra='forbid')
+        packet: dict
+
     @app.get('/api/chatgpt-plan')
     def status():
         return narrator.status() if enabled else dict(available=False, connected=False,
@@ -269,11 +301,36 @@ def mount_plan_routes(app, narrator, cloud=False):
     @app.post('/api/chatgpt-plan/connect')
     def connect(request: Request):
         require()
+        if remote:
+            raise DomainError(409, 'La autorización loopback se completa en el computador; no se inicia desde el servidor.')
         return dict(url=narrator.begin(str(request.base_url).rstrip('/')))
+
+    @app.post('/api/chatgpt-plan/handoff')
+    def handoff_descriptor():
+        require()
+        if not remote:
+            raise DomainError(409, 'El descriptor se prepara en tu servidor personal.')
+        return narrator.handoff_descriptor()
+
+    @app.post('/api/chatgpt-plan/prepare-transfer')
+    def prepare_transfer(body: HandoffInput):
+        require()
+        if remote:
+            raise DomainError(409, 'El paquete se prepara en la instalación personal local.')
+        return narrator.prepare_handoff(body.descriptor, body.target_origin)
+
+    @app.post('/api/chatgpt-plan/import')
+    def import_handoff(body: ImportHandoff):
+        require()
+        if not remote:
+            raise DomainError(409, 'La sesión cifrada se recibe en el servidor personal.')
+        return narrator.import_handoff(body.packet)
 
     @app.get('/auth/callback')
     def callback(request: Request):
         require()
+        if remote:
+            raise DomainError(409, 'Este servidor no recibe retornos de autorización loopback.')
         try:
             narrator.finish(dict(request.query_params),str(request.url).split('?')[0])
             body = '<h1>ChatGPT conectado a Umbral</h1><p>Vuelve a Umbral para elegir un modelo y jugar.</p><a href="/">Volver a Umbral</a>'
