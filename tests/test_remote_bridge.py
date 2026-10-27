@@ -274,6 +274,7 @@ def test_migration_upgrades_existing_canon_without_modifying_records(tmp_path):
     setup = engine.wizard(Wizard(universe_name='Migración ficticia', campaign_name='Prueba', protagonist_name='Lua'))
     before = engine.snapshot(setup['universe_id'])
     with old.session(True) as session:
+        session.execute(text('DROP TABLE runtime_secrets'))
         session.execute(text('DROP TABLE bridge_grants'))
         session.execute(text('ALTER TABLE turns DROP COLUMN provenance'))
         session.execute(text("UPDATE alembic_version SET version_num = '0003'"))
@@ -282,7 +283,7 @@ def test_migration_upgrades_existing_canon_without_modifying_records(tmp_path):
     try:
         assert Engine(upgraded).snapshot(setup['universe_id']) == before
         with upgraded.session() as session:
-            assert session.scalar(text('SELECT version_num FROM alembic_version')) == '0005'
+            assert session.scalar(text('SELECT version_num FROM alembic_version')) == '0006'
             assert list(session.scalars(select(BridgeGrant))) == []
     finally:
         upgraded.engine.dispose()

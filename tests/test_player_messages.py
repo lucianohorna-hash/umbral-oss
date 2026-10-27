@@ -142,6 +142,7 @@ def test_migration_preserves_old_turns_and_adds_empty_provenance(game):
     # Simulate an existing v4 file, then use the ordinary startup migration.
     engine.db.engine.dispose()
     with sqlite3.connect(engine.db.path) as connection:
+        connection.execute('DROP TABLE runtime_secrets')
         connection.execute('ALTER TABLE turns DROP COLUMN provenance')
         connection.execute("UPDATE alembic_version SET version_num='0004'")
         connection.execute('INSERT INTO turns VALUES(?,?,?,?,?,?,?,?,?)',
