@@ -104,8 +104,8 @@
     },
     {
       "path": "narrative/chatgpt_plan.py",
-      "bytes": 19638,
-      "sha256": "7b856b1e896f5eeac6ecb0f7cc466f72f0ce59363f9026cee8bb569315fcb01b"
+      "bytes": 19237,
+      "sha256": "8e8890b1abcc6535823621b4444640fcadc5996efcfb52bf4cd837ce08ab4153"
     },
     {
       "path": "narrative/cli.py",
@@ -153,14 +153,19 @@
       "sha256": "bb0785b72a52878576167c078760dc566e5250deecb129eddd78e060a6230800"
     },
     {
+      "path": "narrative/narrator_policy.py",
+      "bytes": 3672,
+      "sha256": "f108f33bfa95b6b6b75e88d588907fc04a84270f3e5b744872b6458611cdcc73"
+    },
+    {
       "path": "narrative/plan_handoff.py",
       "bytes": 7559,
       "sha256": "79f07a7a3fb243e44023878831e9b63f9e4bcd626b2531db854159a21280ea9a"
     },
     {
       "path": "narrative/providers.py",
-      "bytes": 3271,
-      "sha256": "555cf54f01f22ec798027a501737a8fc6b7aef6d5d1776982622d6ac3f2fca5d"
+      "bytes": 2509,
+      "sha256": "eaf4f7e58fc2921810fa05037431b3acd34aac69d8d20ba48010930c122a2395"
     },
     {
       "path": "narrative/recall.py",
@@ -398,5 +403,5 @@
       "sha256": "9f8a80be4c5088cec7316cd2c9616e5350aec551c0adac27d595dc4f75b493ce"
     }
   ],
-  "review_archive_sha256": "5df3ec2316cf708a9b7e8ec9a50cd92d26d776608f3719e8ffa7621a263c581f"
+  "review_archive_sha256": "df912c6a6f6629ccf9085961ef9a460afe8321a9f8f86d78fa95eff7831e14f4"
 }
