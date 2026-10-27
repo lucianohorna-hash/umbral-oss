@@ -97,5 +97,17 @@
     disconnect.addEventListener('click',action(async()=>{const result=await request('/disconnect',{});await refresh();status.textContent=result.message;}));
     await refresh();
   }
-  init().catch(error=>{if(status){panel.hidden=false;status.textContent=error.message;}});
+  const ready=init();
+  // Saving a decision must wait for initialization, rather than silently skipping
+  // narration while the mobile connection/catalogue is still loading.
+  window.UmbralPlan={ensureAutomatic:async()=>{
+    await ready;
+    const toggle=document.getElementById('plan-auto-narrate');
+    if(!toggle)throw Error('La conexión del narrador no terminó de cargar. Vuelve a abrir Umbral.');
+    if(!toggle.checked)return false;
+    await refresh();
+    if(toggle.disabled)throw Error(status.textContent||'Verifica la conexión del narrador para continuar.');
+    return true;
+  }};
+  ready.catch(error=>{if(status){panel.hidden=false;status.textContent=error.message;}});
 })();

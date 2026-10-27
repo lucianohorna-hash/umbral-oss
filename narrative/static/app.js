@@ -401,9 +401,12 @@
       if(s.cid===cid){
         $('turn-list').scrollTop=$('turn-list').scrollHeight;
         notify('Intervención guardada en «'+campaignName+'». Puedes cerrar y retomar esta campaña.');
-        if(role==='user'&&['chatgpt-plan','chatgpt-plan-self-hosted'].includes(s.provider)&&document.getElementById('plan-auto-narrate')?.checked&&!document.getElementById('plan-auto-narrate').disabled){
+        if(role==='user'&&['chatgpt-plan','chatgpt-plan-self-hosted'].includes(s.provider)){
           notify('Tu decisión está guardada. El narrador está consultando la memoria…');
           try{
+            if(!window.UmbralPlan)throw Error('La conexión del narrador no está cargada. Vuelve a abrir Umbral; tu decisión ya está guardada.');
+            if(!await window.UmbralPlan.ensureAutomatic())return;
+            if(s.cid!==cid||s.uid!==uid)throw Error('Cambiaste de campaña. Abre la campaña original y pulsa Generar respuesta del narrador.');
             await requestNarration(cid);
             await refreshSelectedUniverse(uid);
             notify('Tu decisión y la respuesta del narrador están guardadas. La escena queda por revisar.');
