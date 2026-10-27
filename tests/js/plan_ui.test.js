@@ -29,6 +29,7 @@ async function boot(provider, initial, failures={}){
     else if(failures[url])return {ok:false,json:async()=>({detail:'Fallo simulado'})};
     else if(url==='/api/chatgpt-plan')data={...state};
     else if(url==='/api/chatgpt-plan/models'){
+      if(failures.delayModels)await failures.delayModels;
       if(state.needs_verification)state={...state,connected:true,needs_verification:false,model:'small-test'};
       data={models:[{id:'small-test',name:'Modelo ficticio'}]};
     }else if(url==='/api/chatgpt-plan/prepare-transfer'){
@@ -38,11 +39,12 @@ async function boot(provider, initial, failures={}){
     else throw Error('Unexpected fixture request: '+url);
     return {ok:true,json:async()=>data};
   };
+  const window={location:{origin:'https://umbral.example',assign(){}}};
   vm.runInNewContext(source,{document,fetch,Option:function(name,value){this.textContent=name;this.value=value;},
-    window:{location:{origin:'https://umbral.example',assign(){}}},Blob,URL,setTimeout,JSON,Error});
+    window,Blob,URL,setTimeout,JSON,Error});
   for(let i=0;i<8;i++)await new Promise(resolve=>setImmediate(resolve));
   const all=()=>{const result=[];const walk=n=>{result.push(n);for(const child of n.children||[])walk(child);};walk(aside);return result;};
-  return {nodes,calls,aside,all,byText:text=>all().find(n=>n.textContent===text)};
+  return {window,nodes,calls,aside,all,byText:text=>all().find(n=>n.textContent===text)};
 }
 
 test('server panel appears on the hosted app and enables the selected model',async()=>{
@@ -106,4 +108,29 @@ test('raw credential files are rejected before any server upload',async()=>{
   await ui.nodes.get('server-handoff-import').emit('click');
   assert.ok(!ui.calls.some(c=>c.url.endsWith('/import')));
   assert.ok(!ui.all().some(n=>(n.textContent||'').includes('DO-NOT-UPLOAD')));
+});
+
+
+test('automatic narration waits for a slow mobile catalogue instead of silently skipping',async()=>{
+  let release;
+  const gate=new Promise(resolve=>{release=resolve;});
+  const ui=await boot('chatgpt-plan-self-hosted',{connected:true,model:'small-test'},{delayModels:gate});
+  assert.equal(ui.nodes.get('plan-auto-narrate').disabled,true);
+  let finished=false;
+  const pending=ui.window.UmbralPlan.ensureAutomatic().then(value=>{finished=true;return value;});
+  await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(finished,false);
+  release();
+  assert.equal(await pending,true);
+});
+
+test('an unavailable plan reports failure after save instead of pretending the turn is answered',async()=>{
+  const ui=await boot('chatgpt-plan-self-hosted',{connected:true,model:'small-test'},{'/api/chatgpt-plan/models':true});
+  await assert.rejects(ui.window.UmbralPlan.ensureAutomatic(),/No se pudo comprobar/);
+});
+
+test('explicitly disabling automatic narration remains respected',async()=>{
+  const ui=await boot('chatgpt-plan-self-hosted',{connected:true,model:'small-test'});
+  ui.nodes.get('plan-auto-narrate').checked=false;
+  assert.equal(await ui.window.UmbralPlan.ensureAutomatic(),false);
 });
