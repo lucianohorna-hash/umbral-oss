@@ -38,6 +38,8 @@ La demostración es ficticia y usa otra base:
 - `continuity.py`, `identity.py`: verificaciones y anclajes de identidad.
 - `memory.py`, `recall.py`: consulta de detalles y citas históricas con procedencia.
 - `narration.py`, `providers.py`, `chatgpt_plan.py`: coordinación y adaptadores de IA.
+- `self_hosted_plan.py`, `runtime_credentials.py`, `plan_handoff.py`: sesión personal
+  persistente del servidor y traspaso cifrado, separados del canon.
 - `simulation.py`, `importer.py`: avance fuera de escena e importación revisable.
 - `api.py`, `security.py`, `remote_bridge.py`: transporte y límites de acceso.
 - `static/`: interfaz conversacional e instalación como PWA.
@@ -49,21 +51,47 @@ reintentos recuperan respuestas ya guardadas. No se garantiza cero errores
 semánticos: la prosa libre requiere revisión y la recuperación histórica es
 literal y limitada. Las coincidencias entre símbolos no prueban una conexión.
 
-## iPhone y servidor propio: pendiente de habilitación
+## iPhone y servidor personal de código abierto
 
 Instalar la PWA no incorpora un modelo al iPhone. Para recibir respuestas con
 el computador apagado hace falta un proveedor autorizado ejecutándose en el
 servidor, credenciales persistentes protegidas y una prueba real desde el teléfono.
-El flujo ChatGPT incluido es personal y local; no está habilitado como proveedor
-remoto. `render.yaml` prepara alojamiento manual con PostgreSQL, no activa por sí
-solo la narración del plan ChatGPT ni acredita una aprobación del producto.
+`render.yaml` prepara alojamiento manual con PostgreSQL. Para la instalación
+personal de código abierto, `NARRATIVE_PERSONAL_OSS_PLAN=true` habilita el adaptador
+del servidor, inicialmente sin sesión. Esta opción requiere HTTPS y la protección
+de propietario del backend; rechaza proveedores alternativos configurados.
 
 La guía oficial para aplicaciones de código abierto en máquinas virtuales propias
 describe autorizar localmente la misma herramienta/cuenta/espacio de trabajo,
 transferir una sesión protegida, conservar un host propio y dejar la renovación
-al servidor. No autoriza a compartir la cuenta entre usuarios. Aún falta adaptar
-y verificar ese recorrido para esta edición, y confirmar que el alojamiento
-elegido cumple los requisitos de persistencia y protección.
+al servidor. Cada instalación debe completar la comprobación real de la cuenta
+y del dispositivo.
+Esto no equivale a una autorización para ofrecer un producto comercial alojado
+con los planes de otras personas ni para compartir una cuenta entre usuarios.
+
+El propietario inicia sesión en su instalación local con el mismo cliente,
+cuenta y espacio de trabajo que utilizará en el servidor. En el panel del
+servidor prepara su archivo de conexión; en el computador selecciona ese archivo
+y prepara el paquete cifrado para el origen HTTPS mostrado. La sesión local
+deja de renovar y conserva únicamente el paquete protegido para los reintentos.
+Después carga ese paquete en el servidor y verifica el catálogo del plan.
+Este paso transfiere credenciales: no debe hacerse sin autorización específica
+del propietario para el servidor de destino. La preparación del descriptor no
+transfiere la sesión por sí sola.
+
+Los paquetes caducan a los 15 minutos. Los reintentos de una importación ya
+confirmada recuperan su recibo y no reemplazan tokens renovados. El servidor
+conserva su propio host; el paquete no incluye su clave privada. Su sesión se
+almacena cifrada en PostgreSQL, incluso si el alojamiento pierde archivos al
+reiniciarse. La renovación tiene un único responsable; no se debe ejecutar
+otra copia del perfil original en paralelo. Si se pierde la clave del servidor,
+la aplicación bloquea la sesión en lugar de sustituirla silenciosamente.
+
+Tras elegir un modelo disponible, las decisiones escritas en Umbral pueden
+recibir respuesta automática dentro de la misma PWA. Una instalación todavía
+sin sesión o con un catálogo que no se pudo verificar mantiene desactivada esa
+respuesta y conserva la intervención. La verificación final requiere probarlo
+desde el iPhone con el computador apagado; las pruebas simuladas no la acreditan.
 
 Referencias:
 

@@ -19,8 +19,8 @@
   "files": [
     {
       "path": ".env.example",
-      "bytes": 435,
-      "sha256": "f6a753e2ad0115232dd8bf8b5aab0b97e1700ae55e0a2a5c601714bfec4d8d44"
+      "bytes": 617,
+      "sha256": "2bb9ab7f2a8e59289604fe816eae796b263daaa996d94176703172f07a1b4623"
     },
     {
       "path": ".gitignore",
@@ -34,8 +34,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 4889,
-      "sha256": "45fb164e3155d6d6bbc10e8674e898bf8aa2d0801c15dfd46d306ed378612254"
+      "bytes": 6763,
+      "sha256": "e7ab64a11df8e615ad4262e0bd2b28d9b5924c6c074a0c71e3fa4854b8361694"
     },
     {
       "path": "iniciar-demo.cmd",
@@ -83,6 +83,11 @@
       "sha256": "b20f3ae4f64ee41581d7d3e96981466951f5577e1ec86655363c3730b22058be"
     },
     {
+      "path": "migrations/versions/0006_runtime_secrets.py",
+      "bytes": 1094,
+      "sha256": "096c1f50eed6d2ae5124a204622fa39d971adbb0f3057fc8da26dd3623adbec8"
+    },
+    {
       "path": "migrations/versions/__init__.py",
       "bytes": 37,
       "sha256": "ae72cfcb982dce687820383a5b61041c265fa01e84abc1f513e8a99820d17acf"
@@ -94,13 +99,13 @@
     },
     {
       "path": "narrative/api.py",
-      "bytes": 13760,
-      "sha256": "82502714d00102058594f98bd3bcf219e7746e97eefbf94818ece34d6b9a04d5"
+      "bytes": 14566,
+      "sha256": "b238f80f707e0c03e49e554abb100f686abd02152a6dabf046ab94dabaf4f6ee"
     },
     {
       "path": "narrative/chatgpt_plan.py",
-      "bytes": 16804,
-      "sha256": "58b7832a95099bcf71cea711e7192e77b76a95fb3924322f12bad7bd23f3015d"
+      "bytes": 19638,
+      "sha256": "7b856b1e896f5eeac6ecb0f7cc466f72f0ce59363f9026cee8bb569315fcb01b"
     },
     {
       "path": "narrative/cli.py",
@@ -109,8 +114,8 @@
     },
     {
       "path": "narrative/cloud.py",
-      "bytes": 1162,
-      "sha256": "8de9dd503e725b46bf209a911afb5a5525d6f92f1016f1f5fc6f9f888c98fcab"
+      "bytes": 1677,
+      "sha256": "1c1ca24d68287ba7bd54f630fab390da4eedcce3a686486e9bcbb149289319e4"
     },
     {
       "path": "narrative/continuity.py",
@@ -119,8 +124,8 @@
     },
     {
       "path": "narrative/db.py",
-      "bytes": 10669,
-      "sha256": "bb9d162b1454aa0527f749ea4c82fd7de6ed762fa82baf1659ef5098671784cf"
+      "bytes": 11099,
+      "sha256": "326459980001f3948c75bf118c95da87ced7af73197f3a5b6abee86f31f08964"
     },
     {
       "path": "narrative/identity.py",
@@ -148,6 +153,11 @@
       "sha256": "bb0785b72a52878576167c078760dc566e5250deecb129eddd78e060a6230800"
     },
     {
+      "path": "narrative/plan_handoff.py",
+      "bytes": 7559,
+      "sha256": "79f07a7a3fb243e44023878831e9b63f9e4bcd626b2531db854159a21280ea9a"
+    },
+    {
       "path": "narrative/providers.py",
       "bytes": 3271,
       "sha256": "555cf54f01f22ec798027a501737a8fc6b7aef6d5d1776982622d6ac3f2fca5d"
@@ -163,6 +173,11 @@
       "sha256": "93bbc0ffadf5e2fd60efd55a86d209ca123b25616231c6bccba0048a93f93823"
     },
     {
+      "path": "narrative/runtime_credentials.py",
+      "bytes": 4153,
+      "sha256": "88590a96a2432f0b0ba411648dedeebe162d6f2bb3bcfa766c8f2ea0c9dadaa0"
+    },
+    {
       "path": "narrative/schemas.py",
       "bytes": 9106,
       "sha256": "63ef43474e2ddeccff8837a870e538ada4b22e269bbc91233cd82c97c0dfd6d1"
@@ -171,6 +186,11 @@
       "path": "narrative/security.py",
       "bytes": 3090,
       "sha256": "69888378c1d8dfdfb65272584ce172441f6a55ef16e07515b17e8ebd49555b67"
+    },
+    {
+      "path": "narrative/self_hosted_plan.py",
+      "bytes": 4684,
+      "sha256": "56303e2cce6815a088eaf53cccc9634a5082b1ad168a73cb88523deac659b51f"
     },
     {
       "path": "narrative/service.py",
@@ -184,8 +204,8 @@
     },
     {
       "path": "narrative/static/app.js",
-      "bytes": 66816,
-      "sha256": "7b08a2d6d4eddc2f1d74fdad9a639f97b0ab8440b13ce100e01382c42b285bbb"
+      "bytes": 66890,
+      "sha256": "7ea138bdf4143f8a5afd0fdf322ea61c63497c2a6fc826a545618b5706632d97"
     },
     {
       "path": "narrative/static/auth.js",
@@ -194,8 +214,8 @@
     },
     {
       "path": "narrative/static/chatgpt-plan.js",
-      "bytes": 3801,
-      "sha256": "002417a58477b596da909bc1d1038d142ce8ec0d4002448f6330597782056d67"
+      "bytes": 10109,
+      "sha256": "7be175f10999f3a9d9c95c82f5458659c705fd076d9dacdbe798f93e4cd3f032"
     },
     {
       "path": "narrative/static/icon-192.png",
@@ -234,8 +254,8 @@
     },
     {
       "path": "pyproject.toml",
-      "bytes": 826,
-      "sha256": "42483a9f7980039f6527540d07f5033ac223906c05d6b8bb8a6bcc0706f65bda"
+      "bytes": 852,
+      "sha256": "9c31112a997b3d9c955497bc8eaefa033d3a794e0b7c67741488abeb1e7a2e63"
     },
     {
       "path": "render.yaml",
@@ -249,13 +269,18 @@
     },
     {
       "path": "requirements.cloud.txt",
-      "bytes": 78,
-      "sha256": "383db923b9245d8434a59e14c84bcee7fd678b70ee2a552a1173913056e366cb"
+      "bytes": 121,
+      "sha256": "b8589118c4f7e1d5c8b7322a0f90d53e8dc0d26a923edbb2c4fd06b07a62f129"
     },
     {
       "path": "requirements.lock.txt",
       "bytes": 550,
       "sha256": "63df887aff34f1e279109fe7d5e69ab61ebdfe46880044ce62095e34b5b44da5"
+    },
+    {
+      "path": "tests/js/plan_ui.test.js",
+      "bytes": 6655,
+      "sha256": "7fd3fee06547938f80babe4478820153dfaf81374027a1a263459901773f6992"
     },
     {
       "path": "tests/test_api.py",
@@ -328,9 +353,19 @@
       "sha256": "3c07326ef613e16c71e5eff093927d24334107bc70c66369513706a97742336f"
     },
     {
+      "path": "tests/test_plan_handoff.py",
+      "bytes": 6848,
+      "sha256": "7102d2f080f52c422644135b70b38e3b38cf676bf75f40351a01c619f9cec27f"
+    },
+    {
+      "path": "tests/test_plan_ui.py",
+      "bytes": 466,
+      "sha256": "eba83c3db4bb56fe7504793b9b07398c6d2f03ad26216f382bd6b3ae4fe16a67"
+    },
+    {
       "path": "tests/test_player_messages.py",
-      "bytes": 8726,
-      "sha256": "2ac87706b5d56dc23567cd397fe8ce8fcc4a98937c77b2c0828e00755efc90ce"
+      "bytes": 8783,
+      "sha256": "8fa8285b9fae85568ff955e5c9f8aaf9caf7cdd15f2ba44f509bcb1089262b5d"
     },
     {
       "path": "tests/test_postgres_integration.py",
@@ -339,8 +374,23 @@
     },
     {
       "path": "tests/test_remote_bridge.py",
-      "bytes": 16995,
-      "sha256": "60aa222f9cbaa4353c7a6a3b129ebdd96937d418ebe2d821ab68895359ad1eb6"
+      "bytes": 17055,
+      "sha256": "f8d9ec80f8cfe764b11f9f9323b002d698840325eba65c25234c17e7a3df59e3"
+    },
+    {
+      "path": "tests/test_runtime_credentials.py",
+      "bytes": 5304,
+      "sha256": "ac174ed0d7331f12c08f8aaafb9085918df417cc83c8ee4c4bbfea26bce85c0e"
+    },
+    {
+      "path": "tests/test_runtime_credentials_postgres.py",
+      "bytes": 5907,
+      "sha256": "c8fa86ffb87f36f86c520bb2e7cff5ae07ec49233137c5a7fc549efbd0aa1771"
+    },
+    {
+      "path": "tests/test_self_hosted_plan.py",
+      "bytes": 8564,
+      "sha256": "31c8c643e52619c77509b8aa8044836a9f729d8a2de5a907a877634ea929cf78"
     },
     {
       "path": "tests/test_turn_retry.py",
@@ -348,5 +398,5 @@
       "sha256": "9f8a80be4c5088cec7316cd2c9616e5350aec551c0adac27d595dc4f75b493ce"
     }
   ],
-  "review_archive_sha256": "47821a510c949a8d967f6bc25eca5245546c1a07f60332477a56b32e42bfb753"
+  "review_archive_sha256": "807115aec566dc80ac4664d2dbf29b37f20d19c8db2053a8695b3f5caa11e27f"
 }

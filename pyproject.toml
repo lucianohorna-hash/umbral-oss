@@ -14,7 +14,7 @@ dependencies = [
 
 [project.optional-dependencies]
 dev = ["pytest>=8,<10"]
-cloud = ["psycopg[binary]>=3.2,<4"]
+cloud = ["psycopg[binary]>=3.2,<4", "PyJWT[crypto]>=2.10,<3"]
 chatgpt = ["mcp>=2.3,<3"]
 chatgpt-plan = ["PyJWT[crypto]>=2.10,<3"]
 
