@@ -204,8 +204,8 @@
     },
     {
       "path": "narrative/static/app.js",
-      "bytes": 66890,
-      "sha256": "7ea138bdf4143f8a5afd0fdf322ea61c63497c2a6fc826a545618b5706632d97"
+      "bytes": 67142,
+      "sha256": "417b9c59e9d3b628eea15b19227c1d928ed7b9853d9748ebdb91e03b8a30076e"
     },
     {
       "path": "narrative/static/auth.js",
@@ -214,8 +214,8 @@
     },
     {
       "path": "narrative/static/chatgpt-plan.js",
-      "bytes": 10109,
-      "sha256": "7be175f10999f3a9d9c95c82f5458659c705fd076d9dacdbe798f93e4cd3f032"
+      "bytes": 10718,
+      "sha256": "86e09daf1de6a529b8a0f3d48dc4399e51de4beac09c26edb4bf16079ed90d6b"
     },
     {
       "path": "narrative/static/icon-192.png",
@@ -279,8 +279,8 @@
     },
     {
       "path": "tests/js/plan_ui.test.js",
-      "bytes": 6655,
-      "sha256": "7fd3fee06547938f80babe4478820153dfaf81374027a1a263459901773f6992"
+      "bytes": 8084,
+      "sha256": "167a49054853e89e2c4cfac73d91fb27fc50e8107096b04c9ec83b1a811067d5"
     },
     {
       "path": "tests/test_api.py",
@@ -398,5 +398,5 @@
       "sha256": "9f8a80be4c5088cec7316cd2c9616e5350aec551c0adac27d595dc4f75b493ce"
     }
   ],
-  "review_archive_sha256": "807115aec566dc80ac4664d2dbf29b37f20d19c8db2053a8695b3f5caa11e27f"
+  "review_archive_sha256": "3873ff2fca4efed4097de2a84b6013f524ee808f153767ddfc5c43314fe9d6dd"
 }
