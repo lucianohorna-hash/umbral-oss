@@ -1,0 +1,18 @@
+{
+  "id": "/",
+  "name": "Umbral · Universo narrativo",
+  "short_name": "Umbral",
+  "description": "Campañas narrativas con continuidad y memoria. Sin API de IA obligatoria.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "background_color": "#f5f4ee",
+  "theme_color": "#152e28",
+  "lang": "es",
+  "prefer_related_applications": false,
+  "icons": [
+    {"src": "/static/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable"},
+    {"src": "/static/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}
+  ]
+}
