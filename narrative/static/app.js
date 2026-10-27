@@ -74,7 +74,7 @@
     narratorNotice.hidden=s.provider!=='manual';
     narratorNotice.textContent='Sin narrador automático en esta versión: guardar conserva tu intervención, pero no genera una respuesta. La conexión directa con tu plan ChatGPT aún no está habilitada aquí.';
     $('turn-form').querySelector('[type=submit]').textContent=s.provider==='manual'?'Guardar intervención · sin respuesta automática':'Guardar intervención ↗';
-    $('turn-form').querySelector('[type=submit]').disabled=!c||s.savingTurn;$('generate-area').hidden=!c||s.provider==='manual';$('provider-label').textContent=s.provider==='manual'?'Narrador automático no conectado':s.provider==='chatgpt-plan'?'Plan ChatGPT · conexión en panel':'Narrador conectado';renderCastPicker();
+    $('turn-form').querySelector('[type=submit]').disabled=!c||s.savingTurn;$('generate-area').hidden=!c||s.provider==='manual';$('provider-label').textContent=s.provider==='manual'?'Narrador automático no conectado':['chatgpt-plan','chatgpt-plan-self-hosted'].includes(s.provider)?'Plan ChatGPT · conexión en panel':'Narrador conectado';renderCastPicker();
     const list=$('turn-list');list.replaceChildren();
     if(!s.turns.length)empty(list,c?'Tu primera escena está por comenzar':'Una historia te espera',c?'Escribe la primera decisión de tu personaje. Quedará guardada para continuar cuando quieras.':'Crea una campaña nueva o selecciona una existente.',c?['Escribir mi primera decisión',()=>$('turn-content').focus()]:['Crear campaña',openWizard]);
     for(const t of s.turns){const pendingPlayer=t.role==='player_pending';const rejectedPlayer=t.role==='player_rejected';const confirmedChatgpt=t.role==='user'&&t.provenance?.producer==='mcp';const n=el('article',undefined,'turn '+t.role);const header=el('div',undefined,'turn-header');const speaker=pendingPlayer?'ChatGPT · por confirmar':rejectedPlayer?'ChatGPT · atribución rechazada':confirmedChatgpt?name(t.protagonist_id)+' · ChatGPT confirmado':t.role==='user'?name(t.protagonist_id):'Narrador';header.append(el('strong',speaker),el('span',new Date(t.created_at).toLocaleString('es',{dateStyle:'short',timeStyle:'short'})));n.append(header,el('div',t.content,'turn-content'));
@@ -401,7 +401,7 @@
       if(s.cid===cid){
         $('turn-list').scrollTop=$('turn-list').scrollHeight;
         notify('Intervención guardada en «'+campaignName+'». Puedes cerrar y retomar esta campaña.');
-        if(role==='user'&&s.provider==='chatgpt-plan'&&document.getElementById('plan-auto-narrate')?.checked&&!document.getElementById('plan-auto-narrate').disabled){
+        if(role==='user'&&['chatgpt-plan','chatgpt-plan-self-hosted'].includes(s.provider)&&document.getElementById('plan-auto-narrate')?.checked&&!document.getElementById('plan-auto-narrate').disabled){
           notify('Tu decisión está guardada. El narrador está consultando la memoria…');
           try{
             await requestNarration(cid);
