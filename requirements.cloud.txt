@@ -1,0 +1,4 @@
+-r requirements.lock.txt
+psycopg[binary]==3.3.6
+tzdata==2026.5
+setuptools>=75

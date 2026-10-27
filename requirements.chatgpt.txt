@@ -1,0 +1,3 @@
+-r requirements.lock.txt
+# Optional local MCP bridge; no model API key or paid inference dependency.
+mcp==2.3.0

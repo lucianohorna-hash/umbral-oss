@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: umbral-narrativo
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.cloud.txt && pip install --no-deps --no-build-isolation -e .
+    startCommand: python -m uvicorn narrative.cloud:from_environment --factory --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.14
+      - key: DATABASE_URL
+        sync: false
+      - key: NARRATIVE_ACCESS_PASSWORD
+        sync: false
+      - key: NARRATIVE_SESSION_SECRET
+        generateValue: true
