@@ -99,8 +99,8 @@
     },
     {
       "path": "narrative/api.py",
-      "bytes": 14566,
-      "sha256": "b238f80f707e0c03e49e554abb100f686abd02152a6dabf046ab94dabaf4f6ee"
+      "bytes": 14708,
+      "sha256": "ba0b790dd6f4ab834c041fb0358d1e6e6228836f0bf7c5f7c38b354457183356"
     },
     {
       "path": "narrative/chatgpt_plan.py",
@@ -229,8 +229,8 @@
     },
     {
       "path": "narrative/static/index.html",
-      "bytes": 16717,
-      "sha256": "fbe361d3d971d4b2dfd77ba914108bdcb69503d8cb60801022c1da78f778fee5"
+      "bytes": 16755,
+      "sha256": "c22b4ed07945e51cff10c6e3572b5c7e891dc2fff6e8d068baf5e6089b279e5b"
     },
     {
       "path": "narrative/static/manifest.webmanifest",
@@ -250,7 +250,7 @@
     {
       "path": "narrative/static/sw.js",
       "bytes": 1457,
-      "sha256": "db42039a22f2793988aee0743a91181cbd76c205540892ad7930f42619f66cd6"
+      "sha256": "9b1d410afec5f4ba74cc5dbc51941d8415b2515053f4ce62c674368919902d2d"
     },
     {
       "path": "pyproject.toml",
@@ -329,8 +329,8 @@
     },
     {
       "path": "tests/test_mobile.py",
-      "bytes": 2052,
-      "sha256": "ba55776a01bcd17705d6b6f46eb9873f152be8741c7ebb21fa9b2cebb987487e"
+      "bytes": 2487,
+      "sha256": "1b4c1197a87acc03858db3fe2fcd57d298913bbb4c8d779732200f14ee5f8240"
     },
     {
       "path": "tests/test_narration_retry.py",
@@ -398,5 +398,5 @@
       "sha256": "9f8a80be4c5088cec7316cd2c9616e5350aec551c0adac27d595dc4f75b493ce"
     }
   ],
-  "review_archive_sha256": "3873ff2fca4efed4097de2a84b6013f524ee808f153767ddfc5c43314fe9d6dd"
+  "review_archive_sha256": "5df3ec2316cf708a9b7e8ec9a50cd92d26d776608f3719e8ffa7621a263c581f"
 }
