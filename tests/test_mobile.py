@@ -53,3 +53,12 @@ def test_service_worker_caches_only_explicit_public_shell_paths():
     assert "!ASSETS.has(url.pathname)" in text
     assert "/api/" not in text
     assert "/health" not in text
+
+
+def test_mobile_revalidates_shell_and_loads_versioned_narration_scripts(tmp_path):
+    client = TestClient(create_app(tmp_path / 'shell.sqlite3'))
+    shell=client.get('/')
+    assert shell.headers['cache-control'] == 'no-cache'
+    for name in ('app.js','chatgpt-plan.js'):
+        assert '/static/'+name+'?v=20261027-mobile2' in shell.text
+        assert client.get('/static/'+name).headers['cache-control'] == 'no-cache'
