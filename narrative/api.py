@@ -134,6 +134,8 @@ def create_app(db_path='data/canon.db', provider=None, access: CloudAccess | Non
         response.headers['Content-Security-Policy'] = "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
         if request.url.path.startswith(('/api', '/bridge/')):
             response.headers['Cache-Control'] = 'no-store'
+        elif request.url.path == '/' or request.url.path.startswith('/static/'):
+            response.headers['Cache-Control'] = 'no-cache'
         if access:
             response.headers['Strict-Transport-Security'] = 'max-age=31536000'
         return response
