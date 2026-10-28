@@ -47,14 +47,33 @@ window.createUmbralExperience=({state,api,el,button,action,actionField,refresh,b
     const audience=actionField('Consultar como','select',[{id:'character',name:'Mi protagonista · sin secretos'},{id:'narrator',name:'Narrador · puede revelar secretos'}]);
     const results=el('div');let sequence=0;
     async function search(){
-      const ticket=++sequence;const q=input.input.value.trim();if(!q)return;
-      const data=await api('/universes/'+uid+'/memory?q='+encodeURIComponent(q)+'&audience='+audience.input.value+'&campaign_id='+cid+'&limit=12');
-      if(ticket!==sequence||!same(uid,cid)||!results.isConnected)return;
-      results.replaceChildren(el('p',data.results?.length?'Coincidencias del archivo. Una semejanza no confirma identidad ni conexión.':'Sin coincidencias visibles con estas palabras. Puedes probar una variante o consultar Huellas.'));
-      for(const r of data.results||[]){const n=el('article',undefined,'record-card');n.append(el('strong',r.title||r.name||'Recuerdo'),el('p',r.excerpt||r.text||''),el('small',r.canonical?'Canon · '+(r.certainty||'registrado'):'Archivo original · no equivale a canon'));n.append(button('Leer entrada completa',async()=>{const detail=await api('/universes/'+uid+'/memory/'+r.origin+'/'+r.id+'?audience='+audience.input.value+'&campaign_id='+cid);if(!same(uid,cid))return;action(detail.title,[el('pre',detail.content||detail.text)],null);$('action-submit').hidden=true;},'text-button'));results.append(n);}
+      const ticket=++sequence,q=input.input.value.trim(),view=audience.input.value;
+      if(!q)return;
+      const current=()=>ticket===sequence&&same(uid,cid)&&results.isConnected&&$('action-dialog').open&&audience.input.value===view&&input.input.value.trim()===q;
+      results.replaceChildren(el('p','Consultando recuerdos…'));
+      try{
+        const data=await api('/universes/'+uid+'/memory?q='+encodeURIComponent(q)+'&audience='+view+'&campaign_id='+cid+'&limit=12');
+        if(!current())return;
+        results.replaceChildren(el('p',data.results?.length?'Coincidencias del archivo. Una semejanza no confirma identidad ni conexión.':'Sin coincidencias visibles con estas palabras. Puedes probar una variante o consultar Huellas.'));
+        for(const r of data.results||[]){
+          const n=el('article',undefined,'record-card');
+          const label=r.canonical?'Canon · '+(r.certainty||'registrado'):r.status==='rejected'?'Descartado · conservado solo como archivo':r.status==='pending'?'Por revisar · todavía no es canon':'Archivo original · no equivale a canon';
+          n.append(el('strong',r.title||r.name||'Recuerdo'),el('p',r.excerpt||r.text||''),el('small',label));
+          n.append(button('Leer entrada completa',async()=>{
+            if(!current())return;
+            try{
+              const detail=await api('/universes/'+uid+'/memory/'+r.origin+'/'+r.id+'?audience='+view+'&campaign_id='+cid);
+              if(!current())return;
+              action(detail.title,[el('pre',detail.content||detail.text)],null);$('action-submit').hidden=true;
+            }catch(error){if(current())results.replaceChildren(el('p',error.message));}
+          },'text-button'));results.append(n);
+        }
+      }catch(error){if(current())results.replaceChildren(el('p',error.message));}
     }
+    input.input.addEventListener('input',()=>{sequence++;results.replaceChildren(el('p','Pulsa Buscar para consultar estas palabras.'));});
+    audience.input.addEventListener('change',()=>{sequence++;results.replaceChildren();if(input.input.value.trim())search();});
     action('Consultar recuerdos',[input.wrap,audience.wrap,results],search,'Buscar');
-    if(query)search().catch(error=>{results.textContent=error.message;});
+    if(query)search();
   }
   function decorate(node){
     const s=state();const text=node.textContent;
