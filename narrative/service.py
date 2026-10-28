@@ -406,8 +406,11 @@ class Engine:
             else:
                 visible = character_projection(records, hero_id)
             context = dict(universe_id=universe.id, campaign_id=campaign.id, protagonist_id=hero_id, version=universe.version, audience=audience, records=visible,
-                        instructions=['No decidas acciones significativas del protagonista.', 'Lo no establecido sigue desconocido.', 'Una creencia nunca equivale automáticamente a un hecho.', 'Los borradores y la conversación no son canon validado.'])
+                        instructions=['No decidas acciones significativas del protagonista.', 'Una creencia nunca equivale automáticamente a un hecho.', 'Los borradores y la conversación no son canon validado.'])
             if audience == 'narrator':
+                context['instructions'] += ['El archivo delimita lo establecido, no todo lo que puede existir: desarrolla el mundo todavía abierto mediante escenas propuestas coherentes.',
+                    'No atribuyas al pasado ni al canon lo que acabas de crear. Una incógnita histórica o un secreto establecido conserva su incertidumbre.',
+                    'Al explorar, ofrece un resultado concreto y observable de la intención del jugador, no otro tramo vacío que solo admita seguir caminando.']
                 context['continuity_anchors'] = narrator_anchors(records)
                 context['instructions'] += ['Reutiliza la identidad y el nombre guardados de cada NPC, también al volver a un lugar.',
                     'El paso del tiempo y la extensión de la conversación no cambian personalidad, emociones ni papeles por sí solos.',
@@ -415,6 +418,8 @@ class Engine:
                     'Declara en event.cast los identificadores, nombres y rasgos utilizados; no inventes sustitutos para puestos ya ocupados.',
                     'Conserva los detalles pequeños por su identificador; parecidos de símbolos, materiales o rasgos no demuestran identidad ni conexión.',
                     'Las conexiones de detalles conservan su certeza propia; busca el archivo antes de afirmar una relación histórica.']
+            else:
+                context['instructions'].append('Lo no establecido sigue desconocido para el personaje; esta vista no autoriza a completar secretos ni recuerdos.')
             return context
 
     def _memory_entries(self, session, universe_id, audience, campaign_id):
