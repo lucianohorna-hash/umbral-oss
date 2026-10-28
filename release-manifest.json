@@ -239,8 +239,8 @@
     },
     {
       "path": "narrative/static/experience.js",
-      "bytes": 8876,
-      "sha256": "9bc1b2ff6a5657de64d8468bf1f401fe6965182344addf9ff07f870337fc656e"
+      "bytes": 9781,
+      "sha256": "8e33af597afd6e3ddb1c84170c6b103dfc3955f400fdb492a07936a3f8cf955d"
     },
     {
       "path": "narrative/static/icon-192.png",
@@ -254,8 +254,8 @@
     },
     {
       "path": "narrative/static/index.html",
-      "bytes": 17080,
-      "sha256": "f82214e745938708e9ca1df10e7a236fb6595c3cb924fb824346c5154223c97f"
+      "bytes": 17076,
+      "sha256": "ec22050cde633ae7e47e942447873b55e0b9cb8b1e3f571e966967e2b9fdc906"
     },
     {
       "path": "narrative/static/manifest.webmanifest",
@@ -280,7 +280,7 @@
     {
       "path": "narrative/static/sw.js",
       "bytes": 1538,
-      "sha256": "3487a13c847e6d2230033e2263812767fa2f9d0fdc25700ebeb20d579789aae3"
+      "sha256": "55d3c180c9ca6e6f8d16050f331f6259f32899da482b930b4b74d56ee12534c0"
     },
     {
       "path": "narrative/static/voice.js",
@@ -311,6 +311,11 @@
       "path": "requirements.lock.txt",
       "bytes": 550,
       "sha256": "63df887aff34f1e279109fe7d5e69ab61ebdfe46880044ce62095e34b5b44da5"
+    },
+    {
+      "path": "tests/js/experience_ui.test.js",
+      "bytes": 4842,
+      "sha256": "c30c0edf263128f02af46493b79ce532bdac6bb0ae514ed3d9942dd9d7196c46"
     },
     {
       "path": "tests/js/plan_ui.test.js",
@@ -409,8 +414,8 @@
     },
     {
       "path": "tests/test_plan_ui.py",
-      "bytes": 647,
-      "sha256": "b2a051189614cfd15625b1b3c6e6c3cd11966b07392df796aa30191703771eb3"
+      "bytes": 734,
+      "sha256": "94013b81fdfa68c2e272246dc71b91e5224cf98270d9661c54fe47a97e52fa4b"
     },
     {
       "path": "tests/test_player_messages.py",
@@ -448,5 +453,5 @@
       "sha256": "9f8a80be4c5088cec7316cd2c9616e5350aec551c0adac27d595dc4f75b493ce"
     }
   ],
-  "review_archive_sha256": "cd44d19766730475a0680ec14724ed38c204710e67038f535356fd333e85f9f2"
+  "review_archive_sha256": "c2851052407ec6264bb8c3bf511fe2fc0f948cc094e81228238a9f39e5258729"
 }
