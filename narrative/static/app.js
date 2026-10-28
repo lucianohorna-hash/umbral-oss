@@ -6,6 +6,7 @@
   const certainty = {confirmed:'Confirmado',hypothesis:'Hipótesis',rumor:'Rumor',interpretation:'Interpretación',refuted:'Refutado',unknown:'Sin determinar',contradiction:'Contradicción pendiente'};
   const labels = {story:'Tu historia',bible:'Memoria del mundo',memory:'Huellas de la historia',characters:'Personajes',timeline:'Cronología',relationships:'Relaciones',review:'Por revisar',import:'Importar historias',history:'Historial y copias'};
   const s = {universes:[],snapshot:null,uid:'',cid:'',turns:[],csrf:'',tab:'story',provider:'manual',cloud:false,loading:false,savingTurn:false};
+  let experience; const narrating=new Map();
   let editor = null, actionSubmit = null, wizardRecords = [], sequence = 0, grantsSequence = 0;
   const draftMemory = new Map();
   const memory = {sequence:0, scope:'', offset:0, next:null};
@@ -58,7 +59,7 @@
     $('welcome').hidden=true;$('workspace').hidden=false;render();restoreDraft();
   }
   async function refresh(){if(s.uid)await loadUniverse(s.uid,s.cid);}
-  function navigate(tab){s.tab=tab;document.querySelectorAll('.view').forEach(n=>n.hidden=n.id!=='view-'+tab);document.querySelectorAll('[data-tab]').forEach(n=>n.classList.toggle('active',n.dataset.tab===tab));$('page-title').textContent=labels[tab];if(tab==='memory'&&memory.scope!==memoryScope())searchMemory(0).catch(showError);if(tab==='history')loadChatgptGrants();}
+  function navigate(tab){const was=s.tab;s.tab=tab;document.querySelectorAll('.view').forEach(n=>n.hidden=n.id!=='view-'+tab);document.querySelectorAll('[data-tab]').forEach(n=>n.classList.toggle('active',n.dataset.tab===tab));$('page-title').textContent=labels[tab];window.UmbralScroll?.show(tab==='story',was!==tab);if(tab==='memory'&&memory.scope!==memoryScope())searchMemory(0).catch(showError);if(tab==='history'){loadChatgptGrants();experience?.recovery();}}
   function stateRow(container,title,value){const n=el('div',undefined,'state-row');n.append(el('dt',title),el('dd',value));container.append(n);}
   function render(){
     $('universe-title').textContent=s.snapshot.universe.name;$('version-label').textContent='Memoria · v'+version();$('demo-label').hidden=!s.snapshot.universe.is_demo;
@@ -76,14 +77,20 @@
     $('turn-form').querySelector('[type=submit]').textContent=$('turn-role').value==='narrator'?'Guardar borrador':s.provider==='manual'?'Guardar intervención · sin respuesta automática':'Enviar y narrar';
     $('generate-turn').textContent='Reintentar respuesta';
     $('turn-form').querySelector('[type=submit]').disabled=!c||s.savingTurn;$('generate-area').hidden=!c||s.provider==='manual';$('provider-label').textContent=s.provider==='manual'?'Narrador automático no conectado':['chatgpt-plan','chatgpt-plan-self-hosted'].includes(s.provider)?'Plan ChatGPT · conexión en panel':'Narrador conectado';renderCastPicker();
-    const list=$('turn-list');list.replaceChildren();
+    const list=$('turn-list');const reading=window.UmbralScroll?.before();list.replaceChildren();
     if(!s.turns.length)empty(list,c?'Tu primera escena está por comenzar':'Una historia te espera',c?'Escribe la primera decisión de tu personaje. Quedará guardada para continuar cuando quieras.':'Crea una campaña nueva o selecciona una existente.',c?['Escribir mi primera decisión',()=>$('turn-content').focus()]:['Crear campaña',openWizard]);
-    for(const t of s.turns){const pendingPlayer=t.role==='player_pending';const rejectedPlayer=t.role==='player_rejected';const confirmedChatgpt=t.role==='user'&&t.provenance?.producer==='mcp';const n=el('article',undefined,'turn '+t.role);const header=el('div',undefined,'turn-header');const speaker=pendingPlayer?'ChatGPT · por confirmar':rejectedPlayer?'ChatGPT · atribución rechazada':confirmedChatgpt?name(t.protagonist_id)+' · ChatGPT confirmado':t.role==='user'?name(t.protagonist_id):'Narrador';header.append(el('strong',speaker),el('span',new Date(t.created_at).toLocaleString('es',{dateStyle:'short',timeStyle:'short'})));n.append(header,el('div',t.content,'turn-content'));
+    for(const t of s.turns){const pendingPlayer=t.role==='player_pending';const rejectedPlayer=t.role==='player_rejected';const confirmedChatgpt=t.role==='user'&&t.provenance?.producer==='mcp';const n=el('article',undefined,'turn '+t.role);n.dataset.turnId=t.id;const header=el('div',undefined,'turn-header');const speaker=pendingPlayer?'ChatGPT · por confirmar':rejectedPlayer?'ChatGPT · atribución rechazada':confirmedChatgpt?name(t.protagonist_id)+' · ChatGPT confirmado':t.role==='user'?name(t.protagonist_id):'Narrador';header.append(el('strong',speaker),el('span',new Date(t.created_at).toLocaleString('es',{dateStyle:'short',timeStyle:'short'})));n.append(header,el('div',t.content,'turn-content'));
+      experience?.decorate(n.querySelector('.turn-content'));
+      if(t.role==='narrator')n.append(button('Corregir escena',()=>experience.correct(t),'text-button'));
+      if(t.provenance?.corrects_turn_id)n.append(badge('Corrección propuesta · original conservado','warning'));
       if(t.role==='narrator'&&window.UmbralVoice?.canRead)n.append(button('Escuchar',()=>window.UmbralVoice.read(t.content),'button secondary'));
       if(pendingPlayer){n.append(badge('Mensaje recibido de ChatGPT · por confirmar','warning'));n.append(button('Sí, este es mi mensaje',()=>reviewPlayerTurn(t,'confirm'),'button primary'),button('No es mi decisión',()=>reviewPlayerTurn(t,'reject'),'text-button'));}
       else if(rejectedPlayer)n.append(badge('Mensaje recibido de ChatGPT · atribución rechazada','warning'));
       else if(confirmedChatgpt)n.append(badge('Origen ChatGPT · confirmado','accepted'));
       if(t.proposal_id){const p=s.snapshot.proposals.find(x=>x.id===t.proposal_id);const revised=p?.status==='rejected'&&p.decision.startsWith('Sustituida por una propuesta corregida:');const validated=s.snapshot.proposals.find(x=>x.status==='accepted'&&x.record.kind==='event'&&x.record.source_ref?.turn_id===t.id);n.append(badge(validated?'Revisión incorporada al archivo':'Borrador · aún no es canon',validated?'accepted':'warning'));n.append(button(p?.status==='accepted'?'Ver registro revisado':revised?'Ver revisión de esta escena':p?.status==='rejected'?'Propuesta descartada':'Revisar esta escena',()=>navigate('review')));}n.append(button('Conservar un detalle',()=>detailFromTurn(t)));list.append(n);}
+    experience?.render();
+    $('generate-turn').disabled=s.savingTurn||narrating.has(s.cid);
+    window.UmbralScroll?.after(s.uid+'/'+s.cid,reading);
     const state=$('campaign-state');state.replaceChildren();if(c){stateRow(state,'Tu protagonista',name(c.data.protagonist_id));stateRow(state,'Dónde está',name(record(c.data.protagonist_id)?.data.location_id));stateRow(state,'Estado',record(c.data.protagonist_id)?.data.status||'Sin establecer');stateRow(state,'Forma de descubrir',c.data.mode==='discover'?'Durante la narración':'Con un mundo definido');}
   }
   async function reviewPlayerTurn(turn,decision){
@@ -219,7 +226,7 @@
   function showData(title,data){$('action-title').textContent=title;$('action-fields').replaceChildren(el('pre',typeof data==='string'?data:JSON.stringify(data,null,2)));$('action-submit').hidden=true;actionSubmit=null;openDialog('action-dialog');}
   function draftKey(cid=s.cid,role=$('turn-role').value){return 'draft.'+cid+'.'+role;}
   function castKey(cid=s.cid){return 'cast.'+cid;}
-  async function requestNarration(cid){
+  async function performNarration(cid){
     const key='umbral.generation-pending.'+cid;
     let payload;
     try{
@@ -229,14 +236,18 @@
       if(!raw){const serialized=JSON.stringify(payload);localStorage.setItem(key,serialized);if(localStorage.getItem(key)!==serialized)throw Error('storage');}
     }catch(_){throw Error('No se pudo proteger el envío del narrador en este navegador. No se solicitó una respuesta.');}
     try{
+      experience?.stage(cid,'El narrador está escribiendo… Tu intervención ya está guardada.');
       const result=await api('/campaigns/'+cid+'/generate',payload);
       try{localStorage.removeItem(key);}catch(_){}
+      experience?.stage(cid,'Respuesta guardada · escena pendiente de revisión.');
       return result;
     }catch(error){
+      experience?.stage(cid,'Tu intervención está guardada. No se pudo obtener la respuesta; usa Reintentar respuesta.');
       if([400,409,422].includes(error.status)){try{localStorage.removeItem(key);}catch(_){}}
       throw error;
     }
   }
+  function requestNarration(cid){if(narrating.has(cid))return narrating.get(cid);const pending=performNarration(cid).finally(()=>{narrating.delete(cid);if(s.snapshot)renderStory();});narrating.set(cid,pending);return pending;}
   function pendingTurnKey(cid,role,id){return 'turn-pending.'+cid+'.'+role+(id?'.'+id:'');}
   function pendingTurnsKey(cid,role){return 'turn-pending-list.'+cid+'.'+role;}
   function receiptStorageError(){return Error('No se pudo revisar el envío pendiente en este navegador. No se envió la intervención; vuelve a cargar la página e inténtalo otra vez.');}
@@ -369,6 +380,7 @@
       }
     }
 
+    experience?.stage(cid,'Guardando tu intervención…');
     s.savingTurn=true;
     $('turn-form').querySelector('[type=submit]').disabled=true;
     try{
@@ -389,6 +401,7 @@
         throw error;
       }
 
+      experience?.stage(cid,'Intervención guardada.');
       removePendingTurn(cid,role,payload.id);
       const isSubmittedContext=s.uid===uid&&s.cid===cid&&$('turn-role').value===role;
       const currentCast=role==='narrator'&&isSubmittedContext?Array.from($('cast-picker').querySelectorAll('input[type=checkbox]:checked')).map(input=>input.value):null;
@@ -401,7 +414,6 @@
       saveDraft();
       await refreshSelectedUniverse(uid);
       if(s.cid===cid){
-        $('turn-list').scrollTop=$('turn-list').scrollHeight;
         notify('Intervención guardada en «'+campaignName+'». Puedes cerrar y retomar esta campaña.');
         if(role==='user'&&s.provider!=='manual'){
           notify('Tu decisión está guardada. El narrador está consultando la memoria…');
@@ -415,11 +427,12 @@
             await refreshSelectedUniverse(uid);
             notify('Tu decisión y la respuesta del narrador están guardadas. La escena queda por revisar.');
           }catch(error){
+            experience?.stage(cid,'Tu decisión está guardada. La respuesta no está disponible; pulsa Reintentar respuesta.');
             notify('Tu decisión sí está guardada. El narrador no pudo responder: '+error.message,true);
           }
         }
       }
-    }finally{
+    }catch(error){experience?.stage(cid,'No se pudo confirmar el guardado. Tu texto y el recibo de envío se conservan; vuelve a intentarlo.');throw error;}finally{
       s.savingTurn=false;
       if(s.snapshot)renderStory();
     }
@@ -464,5 +477,6 @@
   $('memory-audience').addEventListener('change',safe(()=>searchMemory(0)));
   $('memory-prev').addEventListener('click',safe(()=>searchMemory(Math.max(0,memory.offset-25))));
   $('memory-next').addEventListener('click',safe(()=>memory.next===null?null:searchMemory(memory.next)));
+  experience=window.createUmbralExperience?.({state:()=>s,api,el,button,action,actionField,refresh,bootstrap,navigate,notify});
   bootstrap().catch(error=>{if(error.status!==401)showError(error);});
 })();

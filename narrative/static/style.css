@@ -17,3 +17,7 @@ dialog{border:1px solid #d3dbcd;border-radius:10px;width:min(520px,calc(100vw - 
 @media(max-width:780px){main{padding-bottom:max(24px,env(safe-area-inset-bottom))}.memory-pagination .button{min-height:44px}.memory-card h3{overflow-wrap:anywhere}}
 :is(.voice-controls){display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin:.75rem 0;padding:.75rem;border:1px solid var(--line,#d8dfd5);border-radius:.75rem}
 .voice-controls p{flex-basis:100%;margin:.15rem 0}
+
+.story-jump{position:fixed;bottom:calc(18px + env(safe-area-inset-bottom));right:18px;z-index:30;box-shadow:0 3px 14px #0003;max-width:calc(100vw - 36px)}.story-jump[hidden]{display:none}.turn-list{overflow-anchor:none}
+
+.experience-tools{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}.play-status{font-size:13px;color:var(--green);padding:10px 0}.memory-link{font:inherit;color:inherit;background:none;border:0;border-bottom:1px dotted var(--green);padding:0;cursor:pointer;text-align:inherit}.memory-link:focus-visible{outline:2px solid var(--green)}.recovery-row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:12px 0}
