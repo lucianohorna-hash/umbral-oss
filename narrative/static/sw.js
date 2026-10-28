@@ -1,4 +1,4 @@
-const CACHE = 'umbral-shell-v5';
+const CACHE = 'umbral-shell-v6';
 // Only the public app shell is cached. No /api, auth state, canon, turns, or backups.
 const ASSETS = new Set([
   '/',
@@ -6,6 +6,7 @@ const ASSETS = new Set([
   '/static/app.js',
   '/static/auth.js',
   '/static/mobile.js',
+  '/static/voice.js',
   '/static/chatgpt-plan.js',
   '/static/manifest.webmanifest',
   '/static/icon-192.png',

@@ -73,11 +73,13 @@
     if(!narratorNotice){narratorNotice=el('p',undefined,'story-note');narratorNotice.id='narrator-availability';narratorNotice.setAttribute('role','status');$('turn-form').before(narratorNotice);}
     narratorNotice.hidden=s.provider!=='manual';
     narratorNotice.textContent='Sin narrador automático en esta versión: guardar conserva tu intervención, pero no genera una respuesta. La conexión directa con tu plan ChatGPT aún no está habilitada aquí.';
-    $('turn-form').querySelector('[type=submit]').textContent=s.provider==='manual'?'Guardar intervención · sin respuesta automática':'Guardar intervención ↗';
+    $('turn-form').querySelector('[type=submit]').textContent=$('turn-role').value==='narrator'?'Guardar borrador':s.provider==='manual'?'Guardar intervención · sin respuesta automática':'Enviar y narrar';
+    $('generate-turn').textContent='Reintentar respuesta';
     $('turn-form').querySelector('[type=submit]').disabled=!c||s.savingTurn;$('generate-area').hidden=!c||s.provider==='manual';$('provider-label').textContent=s.provider==='manual'?'Narrador automático no conectado':['chatgpt-plan','chatgpt-plan-self-hosted'].includes(s.provider)?'Plan ChatGPT · conexión en panel':'Narrador conectado';renderCastPicker();
     const list=$('turn-list');list.replaceChildren();
     if(!s.turns.length)empty(list,c?'Tu primera escena está por comenzar':'Una historia te espera',c?'Escribe la primera decisión de tu personaje. Quedará guardada para continuar cuando quieras.':'Crea una campaña nueva o selecciona una existente.',c?['Escribir mi primera decisión',()=>$('turn-content').focus()]:['Crear campaña',openWizard]);
     for(const t of s.turns){const pendingPlayer=t.role==='player_pending';const rejectedPlayer=t.role==='player_rejected';const confirmedChatgpt=t.role==='user'&&t.provenance?.producer==='mcp';const n=el('article',undefined,'turn '+t.role);const header=el('div',undefined,'turn-header');const speaker=pendingPlayer?'ChatGPT · por confirmar':rejectedPlayer?'ChatGPT · atribución rechazada':confirmedChatgpt?name(t.protagonist_id)+' · ChatGPT confirmado':t.role==='user'?name(t.protagonist_id):'Narrador';header.append(el('strong',speaker),el('span',new Date(t.created_at).toLocaleString('es',{dateStyle:'short',timeStyle:'short'})));n.append(header,el('div',t.content,'turn-content'));
+      if(t.role==='narrator'&&window.UmbralVoice?.canRead)n.append(button('Escuchar',()=>window.UmbralVoice.read(t.content),'button secondary'));
       if(pendingPlayer){n.append(badge('Mensaje recibido de ChatGPT · por confirmar','warning'));n.append(button('Sí, este es mi mensaje',()=>reviewPlayerTurn(t,'confirm'),'button primary'),button('No es mi decisión',()=>reviewPlayerTurn(t,'reject'),'text-button'));}
       else if(rejectedPlayer)n.append(badge('Mensaje recibido de ChatGPT · atribución rechazada','warning'));
       else if(confirmedChatgpt)n.append(badge('Origen ChatGPT · confirmado','accepted'));
@@ -334,7 +336,7 @@
   $('wizard-universe').addEventListener('change',safe(wizardUniverse));$('wizard-world').addEventListener('change',wizardWorld);$('wizard-protagonist').addEventListener('change',wizardHero);
   document.querySelectorAll('[name=creation-mode]').forEach(n=>n.addEventListener('change',()=>$('world-rules-group').hidden=n.value!=='defined'));
   $('wizard-form').addEventListener('submit',safe(async e=>{e.preventDefault();await busy(e.submitter,async()=>{const hero=$('wizard-protagonist').value;const data=await api('/wizard',{universe_id:$('wizard-universe').value||null,world_id:$('wizard-world').value||null,protagonist_id:hero||null,universe_name:$('universe-name').value.trim()||'Mi universo',campaign_name:$('campaign-name').value,world_name:$('world-name').value,mode:document.querySelector('[name=creation-mode]:checked').value,premise:$('premise').value,world_rules:$('world-rules').value,protagonist_name:hero?wizardRecords.find(r=>r.id===hero).name:$('protagonist-name').value,personality:$('protagonist-personality').value});$('wizard-dialog').close();await bootstrap(data.universe_id,data.campaign_id);navigate('story');notify('Tu campaña está creada y guardada. Puedes empezar cuando quieras.');});}));
-  $('turn-content').addEventListener('input',()=>{saveDraft();$('draft-status').textContent='Borrador pendiente · solo en este navegador';});$('turn-role').addEventListener('change',()=>{restoreDraft();renderCastPicker();$('turn-content').placeholder=$('turn-role').value==='user'?'¿Qué hace o dice tu personaje?':'Escribe una escena propuesta. Se guardará para revisión.';});
+  $('turn-content').addEventListener('input',()=>{saveDraft();$('draft-status').textContent='Borrador pendiente · solo en este navegador';});$('turn-role').addEventListener('change',()=>{restoreDraft();renderStory();$('turn-content').placeholder=$('turn-role').value==='user'?'¿Qué hace o dice tu personaje?':'Escribe una escena propuesta. Se guardará para revisión.';});
   $('turn-form').addEventListener('submit',safe(async e=>{
     e.preventDefault();
     if(s.savingTurn)return;
@@ -401,11 +403,13 @@
       if(s.cid===cid){
         $('turn-list').scrollTop=$('turn-list').scrollHeight;
         notify('Intervención guardada en «'+campaignName+'». Puedes cerrar y retomar esta campaña.');
-        if(role==='user'&&['chatgpt-plan','chatgpt-plan-self-hosted'].includes(s.provider)){
+        if(role==='user'&&s.provider!=='manual'){
           notify('Tu decisión está guardada. El narrador está consultando la memoria…');
           try{
-            if(!window.UmbralPlan)throw Error('La conexión del narrador no está cargada. Vuelve a abrir Umbral; tu decisión ya está guardada.');
-            if(!await window.UmbralPlan.ensureAutomatic())return;
+            if(['chatgpt-plan','chatgpt-plan-self-hosted'].includes(s.provider)){
+              if(!window.UmbralPlan)throw Error('La conexión del narrador no está cargada. Vuelve a abrir Umbral; tu decisión ya está guardada.');
+              await window.UmbralPlan.ensureAutomatic({required:true});
+            }
             if(s.cid!==cid||s.uid!==uid)throw Error('Cambiaste de campaña. Abre la campaña original y pulsa Generar respuesta del narrador.');
             await requestNarration(cid);
             await refreshSelectedUniverse(uid);

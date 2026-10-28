@@ -82,7 +82,8 @@
     const automatic=document.createElement('label');
     const toggle=document.createElement('input');toggle.type='checkbox';toggle.id='plan-auto-narrate';toggle.checked=true;toggle.disabled=true;
     document.getElementById('generate-turn').disabled=true;
-    automatic.append(toggle,document.createTextNode(' El narrador responde al guardar mi decisión'));
+    automatic.hidden=true;
+    automatic.append(toggle,document.createTextNode(' El narrador responde al enviar mi decisión'));
     panel.append(title,status,connect,models,verify,disconnect,automatic,note);
     setupTransfer();
     document.querySelector('.story-aside').prepend(panel);
@@ -100,11 +101,11 @@
   const ready=init();
   // Saving a decision must wait for initialization, rather than silently skipping
   // narration while the mobile connection/catalogue is still loading.
-  window.UmbralPlan={ensureAutomatic:async()=>{
+  window.UmbralPlan={ensureAutomatic:async({required=false}={})=>{
     await ready;
     const toggle=document.getElementById('plan-auto-narrate');
     if(!toggle)throw Error('La conexión del narrador no terminó de cargar. Vuelve a abrir Umbral.');
-    if(!toggle.checked)return false;
+    if(!required&&!toggle.checked)return false;
     await refresh();
     if(toggle.disabled)throw Error(status.textContent||'Verifica la conexión del narrador para continuar.');
     return true;
