@@ -15,6 +15,8 @@ from sqlalchemy import select
 
 from .db import Database, Source, Revision
 from .schemas import Strict, Wizard, ProposalInput, Acceptance, TurnInput, Advance, PlayerMessageReview
+from .schemas import NarrationPreferences
+from .experience import Experience
 from .service import Engine, DomainError, serialize
 from .providers import configured_provider
 from .narration import NarrationCoordinator
@@ -59,6 +61,21 @@ class Generate(Strict):
     @classmethod
     def valid_uuid(cls, value):
         return str(UUID(value)) if value is not None else None
+
+
+class Preferences(Strict):
+    expected_version: int = Field(ge=0)
+    preferences: NarrationPreferences
+
+
+class Correction(Strict):
+    expected_version: int = Field(ge=0)
+    content: str = Field(min_length=1, max_length=50000)
+    reason: str = Field(min_length=1, max_length=10000)
+
+
+class Recovery(Strict):
+    name: str = Field(min_length=1, max_length=200)
 
 
 class Login(Strict):
@@ -232,6 +249,30 @@ def create_app(db_path='data/canon.db', provider=None, access: CloudAccess | Non
     @app.post('/api/campaigns/{identity}/turns/{turn_id}/review-player')
     def review_player_message(identity: str, turn_id: str, body: PlayerMessageReview):
         return engine.review_player_message(identity, turn_id, body)
+
+    @app.get('/api/campaigns/{identity}/resume')
+    def resume(identity: str):
+        return Experience(engine).resume(identity)
+
+    @app.get('/api/campaigns/{identity}/preferences')
+    def preferences(identity: str):
+        return Experience(engine).preferences(identity)
+
+    @app.post('/api/campaigns/{identity}/preferences')
+    def save_preferences(identity: str, body: Preferences):
+        return Experience(engine).preferences(identity, body.preferences, body.expected_version)
+
+    @app.post('/api/campaigns/{identity}/turns/{turn_id}/correction')
+    def correction(identity: str, turn_id: str, body: Correction):
+        return Experience(engine).correction(identity, turn_id, body)
+
+    @app.get('/api/universes/{identity}/recovery')
+    def recovery_points(identity: str):
+        return dict(points=Experience(engine).recovery_points(identity))
+
+    @app.post('/api/universes/{identity}/recovery/{point_id}/restore')
+    def restore_point(identity: str, point_id: str, body: Recovery):
+        return Experience(engine).recover(identity, point_id, body.name)
 
     @app.get('/api/campaigns/{identity}/context')
     def context(identity: str, audience: str = 'character'):

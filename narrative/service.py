@@ -185,7 +185,22 @@ class Engine:
                 issues.append(dict(code='detail_turn_source', severity='error', message='La intervención de origen no pertenece al universo y campaña del detalle.', suggestion='Selecciona una intervención de esta campaña.'))
             elif 'excerpt' in reference and (not isinstance(reference['excerpt'], str) or not reference['excerpt'] or reference['excerpt'] not in turn['content']):
                 issues.append(dict(code='detail_excerpt', severity='error', message='El extracto del detalle debe ser texto exacto de su intervención de origen.', suggestion='Copia el fragmento original sin modificarlo.'))
-        detected, effects = check(validated.model_dump(), records, turns, proposal.target_id)
+        check_record = validated.model_dump()
+        safe_prose_correction = False
+        if validated.source_ref.get('prose_only'):
+            previous = records.get(proposal.target_id)
+            if not previous or previous['kind'] != 'event' or validated.kind != 'event' or proposal.operation != 'replace':
+                issues.append(dict(code='prose_only_target',severity='error',message='La corrección de texto requiere un acontecimiento existente.',suggestion='Revisa el registro de origen.'))
+            elif ({k:v for k,v in previous['data'].items() if k != 'summary'} !=
+                  {k:v for k,v in validated.data.items() if k != 'summary'}):
+                issues.append(dict(code='prose_only_effects',severity='error',message='Una corrección de texto no puede cambiar los efectos materiales.',suggestion='Prepara los cambios materiales como una corrección separada.'))
+            else:
+                safe_prose_correction = True
+            # Effects already happened. Validate prose references, never execute them twice.
+            check_record['data'] = {**check_record['data'], 'actions': [], 'simulation': None}
+        detected, effects = check(check_record, records, turns, proposal.target_id)
+        if safe_prose_correction:
+            detected = [i for i in detected if i['code'] != 'event_effects_correction']
         return issues + detected, effects
 
     def review(self, proposal_id):
@@ -390,6 +405,10 @@ class Engine:
             statuses = {identity: dict(status=status, source_id=record.get('source_id'),
                 certainty=record.get('data', {}).get('certainty', 'unknown'))
                 for identity, status, record in rows}
+            for turn in turns:
+                corrected = turn.get('provenance', {}).get('corrects_turn_id')
+                if corrected and statuses.get(turn['id'], {}).get('status') != 'rejected':
+                    statuses[corrected] = dict(status='rejected')
             recent, recall = prepare_narration_memory(turns, statuses)
             return recent, recall, fingerprint
 
@@ -408,6 +427,11 @@ class Engine:
             context = dict(universe_id=universe.id, campaign_id=campaign.id, protagonist_id=hero_id, version=universe.version, audience=audience, records=visible,
                         instructions=['No decidas acciones significativas del protagonista.', 'Una creencia nunca equivale automáticamente a un hecho.', 'Los borradores y la conversación no son canon validado.'])
             if audience == 'narrator':
+                from .experience import STYLE
+                from .schemas import NarrationPreferences
+                preferences = NarrationPreferences.model_validate(campaign.data.get('narration_preferences', {})).model_dump()
+                context['narration_preferences'] = preferences
+                context['instructions'] += [STYLE[k][v] for k,v in preferences.items()]
                 context['instructions'] += ['El archivo delimita lo establecido, no todo lo que puede existir: desarrolla el mundo todavía abierto mediante escenas propuestas coherentes.',
                     'No atribuyas al pasado ni al canon lo que acabas de crear. Una incógnita histórica o un secreto establecido conserva su incertidumbre.',
                     'Al explorar, ofrece un resultado concreto y observable de la intención del jugador, no otro tramo vacío que solo admita seguir caminando.']

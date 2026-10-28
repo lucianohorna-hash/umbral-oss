@@ -103,6 +103,18 @@ class Turn(Base):
     created_at: Mapped[str] = mapped_column(String, default=now)
 
 
+class RecoveryPoint(Base):
+    __tablename__ = 'recovery_points'
+    __table_args__ = (UniqueConstraint('universe_id', 'bucket'),)
+    id: Mapped[str] = mapped_column(String, primary_key=True, default=uid)
+    universe_id: Mapped[str] = mapped_column(ForeignKey('universes.id'), index=True)
+    bucket: Mapped[str] = mapped_column(String)
+    created_at: Mapped[str] = mapped_column(String, default=now)
+    version: Mapped[int] = mapped_column(Integer)
+    sha256: Mapped[str] = mapped_column(String(64))
+    payload: Mapped[dict] = mapped_column(JSON)
+
+
 class RuntimeSecret(Base):
     """Encrypted transport state; never narrative canon or portable backup data."""
     __tablename__ = 'runtime_secrets'
@@ -162,6 +174,15 @@ class Database:
     @contextmanager
     def session(self, write=False):
         with Session(self.engine, expire_on_commit=False) as session:
+            touched = set()
+            def track(sess, *_):
+                for row in list(sess.new) + list(sess.dirty) + list(sess.deleted):
+                    if isinstance(row, (Universe, Source, Record, Proposal, Revision, Turn)):
+                        identity = row.id if isinstance(row, Universe) else row.universe_id
+                        if identity:
+                            touched.add(identity)
+            if write:
+                event.listen(session, 'before_flush', track)
             try:
                 if self.is_postgres:
                     if write:
@@ -174,6 +195,10 @@ class Database:
                     session.execute(text('BEGIN IMMEDIATE' if write else 'BEGIN'))
                 yield session
                 if write:
+                    session.flush()
+                    from .recovery import capture
+                    for identity in sorted(touched):
+                        capture(session, identity)
                     session.commit()
             except Exception:
                 session.rollback()
@@ -209,6 +234,7 @@ class Database:
             output.execute('PRAGMA secure_delete=ON')
             output.execute('DELETE FROM bridge_grants')
             output.execute('DELETE FROM runtime_secrets')
+            output.execute('DELETE FROM recovery_points')
             output.commit()
             output.execute('VACUUM')
             # The copied header retains WAL mode. Flush the sanitized state into

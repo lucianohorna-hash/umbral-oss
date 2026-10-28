@@ -18,7 +18,15 @@ class World(Strict):
     established: bool = False
 
 
+class NarrationPreferences(Strict):
+    pace: Literal['balanced', 'brisk', 'detailed'] = 'balanced'
+    length: Literal['brief', 'medium', 'long'] = 'medium'
+    tone: Literal['natural', 'adventure', 'intimate', 'dark'] = 'natural'
+    dialogue: Literal['balanced', 'more', 'less'] = 'balanced'
+
+
 class Campaign(Strict):
+    narration_preferences: NarrationPreferences = Field(default_factory=NarrationPreferences)
     protagonist_id: str
     premise: str = ''
     mode: Literal['defined', 'discover'] = 'discover'
