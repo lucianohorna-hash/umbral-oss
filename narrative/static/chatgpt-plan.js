@@ -78,7 +78,7 @@
     models=document.createElement('select');models.setAttribute('aria-label','Modelo de mi plan ChatGPT');
     disconnect=document.createElement('button');disconnect.type='button';disconnect.className='text-button';disconnect.textContent='Desconectar mi plan';
     verify=control('button','Verificar conexión');verify.type='button';verify.className='button secondary';verify.hidden=true;
-    const note=document.createElement('p');note.className='help-note';note.textContent='Cuando la conexión esté verificada y hayas elegido un modelo, guarda tu decisión abajo: el narrador responderá aquí. Puedes desactivar la respuesta automática. La escena queda como propuesta. No se activa una API de pago al agotar tu plan.';
+    const note=document.createElement('p');note.className='help-note';note.textContent='Con tu plan conectado, Enviar y narrar guarda tu decisión y solicita la respuesta. La escena queda como propuesta. Si falla, usa Reintentar respuesta. No se activa una API de pago.';
     const automatic=document.createElement('label');
     const toggle=document.createElement('input');toggle.type='checkbox';toggle.id='plan-auto-narrate';toggle.checked=true;toggle.disabled=true;
     document.getElementById('generate-turn').disabled=true;
