@@ -154,8 +154,8 @@
     },
     {
       "path": "narrative/narrator_policy.py",
-      "bytes": 3672,
-      "sha256": "f108f33bfa95b6b6b75e88d588907fc04a84270f3e5b744872b6458611cdcc73"
+      "bytes": 5944,
+      "sha256": "b5dd82962b54a1b8716f1f2dd077b36bca05a871adf2e6930ed56dc737c29086"
     },
     {
       "path": "narrative/plan_handoff.py",
@@ -199,8 +199,8 @@
     },
     {
       "path": "narrative/service.py",
-      "bytes": 38702,
-      "sha256": "de00f539c9e23d0208703e60b014097c5e93ca3b03999019e601f7cb0afebae1"
+      "bytes": 39361,
+      "sha256": "4164433aa397b59f29ee596292d2bf740f52caf0c5e0ae58633f40ce391c602d"
     },
     {
       "path": "narrative/simulation.py",
@@ -403,5 +403,5 @@
       "sha256": "9f8a80be4c5088cec7316cd2c9616e5350aec551c0adac27d595dc4f75b493ce"
     }
   ],
-  "review_archive_sha256": "df912c6a6f6629ccf9085961ef9a460afe8321a9f8f86d78fa95eff7831e14f4"
+  "review_archive_sha256": "b4c1aa147cdd524159e0767b59a632d628005fe8a08815b24aa931f51cbd6558"
 }
