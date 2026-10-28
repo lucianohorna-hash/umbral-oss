@@ -134,3 +134,9 @@ test('explicitly disabling automatic narration remains respected',async()=>{
   ui.nodes.get('plan-auto-narrate').checked=false;
   assert.equal(await ui.window.UmbralPlan.ensureAutomatic(),false);
 });
+
+test('the explicit send-and-narrate action does not depend on an old unchecked toggle',async()=>{
+  const ui=await boot('chatgpt-plan-self-hosted',{connected:true,model:'small-test'});
+  ui.nodes.get('plan-auto-narrate').checked=false;
+  assert.equal(await ui.window.UmbralPlan.ensureAutomatic({required:true}),true);
+});
