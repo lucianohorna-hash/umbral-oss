@@ -34,8 +34,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 6763,
-      "sha256": "e7ab64a11df8e615ad4262e0bd2b28d9b5924c6c074a0c71e3fa4854b8361694"
+      "bytes": 7504,
+      "sha256": "25c1bd5d2fe8e8f7fe5c824f141ade723461e580019b9ffffc49f26a7de3b6f9"
     },
     {
       "path": "iniciar-demo.cmd",
@@ -209,8 +209,8 @@
     },
     {
       "path": "narrative/static/app.js",
-      "bytes": 67142,
-      "sha256": "417b9c59e9d3b628eea15b19227c1d928ed7b9853d9748ebdb91e03b8a30076e"
+      "bytes": 67450,
+      "sha256": "2dbfa75307f8eb0a72cd7989a4f0d62ec74a1078b7d3b4e6e0c25fe273368f46"
     },
     {
       "path": "narrative/static/auth.js",
@@ -219,8 +219,8 @@
     },
     {
       "path": "narrative/static/chatgpt-plan.js",
-      "bytes": 10718,
-      "sha256": "86e09daf1de6a529b8a0f3d48dc4399e51de4beac09c26edb4bf16079ed90d6b"
+      "bytes": 10775,
+      "sha256": "7f78f0a03b4bf35fd1e5c7d385734dc76212faa37f339ea6b1593287bdf4881e"
     },
     {
       "path": "narrative/static/icon-192.png",
@@ -234,8 +234,8 @@
     },
     {
       "path": "narrative/static/index.html",
-      "bytes": 16755,
-      "sha256": "c22b4ed07945e51cff10c6e3572b5c7e891dc2fff6e8d068baf5e6089b279e5b"
+      "bytes": 16817,
+      "sha256": "2026ba5d02185b147915ccbb3a3535d65845b305608f99f4727a68b734b01891"
     },
     {
       "path": "narrative/static/manifest.webmanifest",
@@ -249,13 +249,18 @@
     },
     {
       "path": "narrative/static/style.css",
-      "bytes": 15743,
-      "sha256": "9411907198c2cdf528d29d220b0a49a436498e946b620a99af0a781cc1a6739f"
+      "bytes": 15962,
+      "sha256": "30033cd542ab79d1b18b849923b28fca25822921b233eece9383b7626bd38411"
     },
     {
       "path": "narrative/static/sw.js",
-      "bytes": 1457,
-      "sha256": "9b1d410afec5f4ba74cc5dbc51941d8415b2515053f4ce62c674368919902d2d"
+      "bytes": 1480,
+      "sha256": "871cf8e9461235b415567d6f74d091395af87f46c162959c5734c97f73763ebe"
+    },
+    {
+      "path": "narrative/static/voice.js",
+      "bytes": 6676,
+      "sha256": "457d9288d124f83050b48de33e96ec13121e5db980546300b45193fcb322d34e"
     },
     {
       "path": "pyproject.toml",
@@ -284,8 +289,13 @@
     },
     {
       "path": "tests/js/plan_ui.test.js",
-      "bytes": 8084,
-      "sha256": "167a49054853e89e2c4cfac73d91fb27fc50e8107096b04c9ec83b1a811067d5"
+      "bytes": 8413,
+      "sha256": "7e788ab3abc288df78a6651ec7ae950f797f0aedb23593bf660264a8aef34ca9"
+    },
+    {
+      "path": "tests/js/voice_ui.test.js",
+      "bytes": 5599,
+      "sha256": "b8bfa6c071c959353b45125d21b6c6d410830c921990abf882c77ecbe20ae333"
     },
     {
       "path": "tests/test_api.py",
@@ -334,8 +344,8 @@
     },
     {
       "path": "tests/test_mobile.py",
-      "bytes": 2487,
-      "sha256": "1b4c1197a87acc03858db3fe2fcd57d298913bbb4c8d779732200f14ee5f8240"
+      "bytes": 2515,
+      "sha256": "365536601753e94f402a0c2248be1f8b963aac606f9a416ee430d47760888a53"
     },
     {
       "path": "tests/test_narration_retry.py",
@@ -364,8 +374,8 @@
     },
     {
       "path": "tests/test_plan_ui.py",
-      "bytes": 466,
-      "sha256": "eba83c3db4bb56fe7504793b9b07398c6d2f03ad26216f382bd6b3ae4fe16a67"
+      "bytes": 547,
+      "sha256": "17f9f4d585008d80230e1a995f84c3b586d72a3d4a4d69a181b0cfebc5485393"
     },
     {
       "path": "tests/test_player_messages.py",
@@ -403,5 +413,5 @@
       "sha256": "9f8a80be4c5088cec7316cd2c9616e5350aec551c0adac27d595dc4f75b493ce"
     }
   ],
-  "review_archive_sha256": "b4c1aa147cdd524159e0767b59a632d628005fe8a08815b24aa931f51cbd6558"
+  "review_archive_sha256": "5f4e6b9f2436dd5b8534738911879a7cb80c6ce9048dbf4dff2384fa1bc7f341"
 }

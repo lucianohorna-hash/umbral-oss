@@ -1,5 +1,17 @@
 # Umbral · código abierto
 
+## Conversación, dictado y lectura
+
+«Enviar y narrar» guarda la decisión y pide la respuesta con un solo botón cuando
+hay un proveedor conectado. «Reintentar respuesta» permite recuperar un envío
+interrumpido. «Dictar» usa el reconocimiento del navegador si está disponible;
+también puedes usar el micrófono del teclado del teléfono. Revisa el texto antes
+de enviarlo. «Escuchar» lee una respuesta con las voces del dispositivo y ofrece
+pausa y detención. La disponibilidad depende del navegador y de sus permisos;
+el reconocimiento puede necesitar internet. Umbral no almacena el audio ni añade
+una API de voz de pago. Las pruebas de interfaz no sustituyen la prueba física
+del micrófono y los altavoces del teléfono.
+
 Motor de universos narrativos persistentes. Crea campañas desde cero, conserva
 personajes, fuentes y conversaciones, y revisa las propuestas antes de cambiar
 el canon. La importación de historias anteriores es opcional.
