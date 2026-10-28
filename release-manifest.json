@@ -34,8 +34,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 7504,
-      "sha256": "25c1bd5d2fe8e8f7fe5c824f141ade723461e580019b9ffffc49f26a7de3b6f9"
+      "bytes": 8575,
+      "sha256": "00b5a73d85aecb6f8a8c10a830b7ca36172c16ce1b4d8aacb2b482a1dc3127fb"
     },
     {
       "path": "iniciar-demo.cmd",
@@ -88,6 +88,11 @@
       "sha256": "096c1f50eed6d2ae5124a204622fa39d971adbb0f3057fc8da26dd3623adbec8"
     },
     {
+      "path": "migrations/versions/0007_recovery_points.py",
+      "bytes": 1471,
+      "sha256": "09194811a1aeeb4e4e505f33ff8ad8db650df53a6938dd435474035c472c0ad5"
+    },
+    {
       "path": "migrations/versions/__init__.py",
       "bytes": 37,
       "sha256": "ae72cfcb982dce687820383a5b61041c265fa01e84abc1f513e8a99820d17acf"
@@ -99,8 +104,8 @@
     },
     {
       "path": "narrative/api.py",
-      "bytes": 14708,
-      "sha256": "ba0b790dd6f4ab834c041fb0358d1e6e6228836f0bf7c5f7c38b354457183356"
+      "bytes": 16271,
+      "sha256": "185d0126508c0b30a7ce584f2fd900703ba42d0af83fc92458cba99517c8c5fe"
     },
     {
       "path": "narrative/chatgpt_plan.py",
@@ -124,8 +129,13 @@
     },
     {
       "path": "narrative/db.py",
-      "bytes": 11099,
-      "sha256": "326459980001f3948c75bf118c95da87ced7af73197f3a5b6abee86f31f08964"
+      "bytes": 12649,
+      "sha256": "0c7aff7269f30c3f6e66ed9afd893d1b3c011632b712e7b9c94d7bbbbf20760a"
+    },
+    {
+      "path": "narrative/experience.py",
+      "bytes": 8738,
+      "sha256": "efc38278e279a1514718eea907bf04a31ab7fa83d323546668bdf4bd6109b10b"
     },
     {
       "path": "narrative/identity.py",
@@ -173,6 +183,11 @@
       "sha256": "48eac2c8f3033c2573affba7bb2d78e8cbdd5595b7258c1400197b628435d8ac"
     },
     {
+      "path": "narrative/recovery.py",
+      "bytes": 4137,
+      "sha256": "bab93f4d952ba22b32b876c0f8ec114633207aec753b3ade5efd9772e97ad2f5"
+    },
+    {
       "path": "narrative/remote_bridge.py",
       "bytes": 11850,
       "sha256": "93bbc0ffadf5e2fd60efd55a86d209ca123b25616231c6bccba0048a93f93823"
@@ -184,8 +199,8 @@
     },
     {
       "path": "narrative/schemas.py",
-      "bytes": 9106,
-      "sha256": "63ef43474e2ddeccff8837a870e538ada4b22e269bbc91233cd82c97c0dfd6d1"
+      "bytes": 9778,
+      "sha256": "ecff884bb2485f6b0f0cb4c14916ac8908c516d679907c9ec17b79cb17e04a24"
     },
     {
       "path": "narrative/security.py",
@@ -199,8 +214,8 @@
     },
     {
       "path": "narrative/service.py",
-      "bytes": 39361,
-      "sha256": "4164433aa397b59f29ee596292d2bf740f52caf0c5e0ae58633f40ce391c602d"
+      "bytes": 41295,
+      "sha256": "b33eae156d0c1fa4c70b16b34d4257e86bd4be7e9c29101d6016e81793174507"
     },
     {
       "path": "narrative/simulation.py",
@@ -209,8 +224,8 @@
     },
     {
       "path": "narrative/static/app.js",
-      "bytes": 67450,
-      "sha256": "2dbfa75307f8eb0a72cd7989a4f0d62ec74a1078b7d3b4e6e0c25fe273368f46"
+      "bytes": 69100,
+      "sha256": "436a2193ef907da70b8fac8c52f3988863acce34e868f2d4a33699e5b55740f7"
     },
     {
       "path": "narrative/static/auth.js",
@@ -221,6 +236,11 @@
       "path": "narrative/static/chatgpt-plan.js",
       "bytes": 10711,
       "sha256": "6f66fde87360d4654a57a84f418970dd6b0b241041e6a805a0d1bcc15148109a"
+    },
+    {
+      "path": "narrative/static/experience.js",
+      "bytes": 8876,
+      "sha256": "9bc1b2ff6a5657de64d8468bf1f401fe6965182344addf9ff07f870337fc656e"
     },
     {
       "path": "narrative/static/icon-192.png",
@@ -234,8 +254,8 @@
     },
     {
       "path": "narrative/static/index.html",
-      "bytes": 16817,
-      "sha256": "2026ba5d02185b147915ccbb3a3535d65845b305608f99f4727a68b734b01891"
+      "bytes": 17080,
+      "sha256": "f82214e745938708e9ca1df10e7a236fb6595c3cb924fb824346c5154223c97f"
     },
     {
       "path": "narrative/static/manifest.webmanifest",
@@ -248,14 +268,19 @@
       "sha256": "b6251273003194a7e9dd4b6c8fc55a29ae219729f2141be473d729d1d62490a5"
     },
     {
+      "path": "narrative/static/story-scroll.js",
+      "bytes": 2866,
+      "sha256": "619aacf53c98f826166d418ad61f0b5f2ae8b6a6191c331cd630cdcbea5d6832"
+    },
+    {
       "path": "narrative/static/style.css",
-      "bytes": 15962,
-      "sha256": "30033cd542ab79d1b18b849923b28fca25822921b233eece9383b7626bd38411"
+      "bytes": 16606,
+      "sha256": "2cda5affc4252cbd250a187482a44ebffef5791e10fab645dbaca28e74420dba"
     },
     {
       "path": "narrative/static/sw.js",
-      "bytes": 1480,
-      "sha256": "871cf8e9461235b415567d6f74d091395af87f46c162959c5734c97f73763ebe"
+      "bytes": 1538,
+      "sha256": "3487a13c847e6d2230033e2263812767fa2f9d0fdc25700ebeb20d579789aae3"
     },
     {
       "path": "narrative/static/voice.js",
@@ -293,6 +318,11 @@
       "sha256": "7e788ab3abc288df78a6651ec7ae950f797f0aedb23593bf660264a8aef34ca9"
     },
     {
+      "path": "tests/js/story_scroll.test.js",
+      "bytes": 2751,
+      "sha256": "4ae27895320175fafe8bc347ab1c033752ad6e6cb0133e2da1ba268e82de05fa"
+    },
+    {
       "path": "tests/js/voice_ui.test.js",
       "bytes": 5599,
       "sha256": "b8bfa6c071c959353b45125d21b6c6d410830c921990abf882c77ecbe20ae333"
@@ -316,6 +346,11 @@
       "path": "tests/test_cloud_access.py",
       "bytes": 5396,
       "sha256": "37ed3645fd9cc6e6862cf09893751cd4332cf40af6e7e22b99c30dd27c6ff77a"
+    },
+    {
+      "path": "tests/test_experience.py",
+      "bytes": 8574,
+      "sha256": "e1f814fd6158277e05028643aeaf1fe426a77c4229457e585934f05a54cfc349"
     },
     {
       "path": "tests/test_importer.py",
@@ -344,8 +379,8 @@
     },
     {
       "path": "tests/test_mobile.py",
-      "bytes": 2515,
-      "sha256": "365536601753e94f402a0c2248be1f8b963aac606f9a416ee430d47760888a53"
+      "bytes": 2636,
+      "sha256": "cf3ed5d243be76f4a295126e31da89b113c95bf3f33dd18313e5d22b7ae0121a"
     },
     {
       "path": "tests/test_narration_retry.py",
@@ -374,13 +409,13 @@
     },
     {
       "path": "tests/test_plan_ui.py",
-      "bytes": 547,
-      "sha256": "17f9f4d585008d80230e1a995f84c3b586d72a3d4a4d69a181b0cfebc5485393"
+      "bytes": 647,
+      "sha256": "b2a051189614cfd15625b1b3c6e6c3cd11966b07392df796aa30191703771eb3"
     },
     {
       "path": "tests/test_player_messages.py",
-      "bytes": 8783,
-      "sha256": "8fa8285b9fae85568ff955e5c9f8aaf9caf7cdd15f2ba44f509bcb1089262b5d"
+      "bytes": 9023,
+      "sha256": "f9afa68b3f07a1c46c3f9f959bf39ed0d74f2980d521d9937e0d680652ba37dd"
     },
     {
       "path": "tests/test_postgres_integration.py",
@@ -389,8 +424,8 @@
     },
     {
       "path": "tests/test_remote_bridge.py",
-      "bytes": 17055,
-      "sha256": "f8d9ec80f8cfe764b11f9f9323b002d698840325eba65c25234c17e7a3df59e3"
+      "bytes": 17405,
+      "sha256": "db70f7c1413730aab14e2fb1261a3d0772825053b1ce6ca5e3bc042f47a4105e"
     },
     {
       "path": "tests/test_runtime_credentials.py",
@@ -413,5 +448,5 @@
       "sha256": "9f8a80be4c5088cec7316cd2c9616e5350aec551c0adac27d595dc4f75b493ce"
     }
   ],
-  "review_archive_sha256": "acc8870a7c136a65b5050e8aff82bc89ff5d2b9b8d7a67b92b5e51b58f7b25e7"
+  "review_archive_sha256": "cd44d19766730475a0680ec14724ed38c204710e67038f535356fd333e85f9f2"
 }

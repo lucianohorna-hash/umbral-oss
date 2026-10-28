@@ -1,5 +1,22 @@
 # Umbral · código abierto
 
+## Continuar, recordar y recuperar
+
+La interfaz muestra el estado de guardado y respuesta. Retomar mi historia resume
+el canon conocido por el protagonista sin revelar secretos ni usar un modelo.
+Los nombres registrados en la conversación abren consultas del archivo. Las
+correcciones conservan el original y crean una propuesta para revisión; no vuelven
+a ejecutar los efectos materiales de escenas ya aceptadas. Ritmo, extensión,
+tono y diálogo se guardan por campaña con control de versión.
+
+Cada escritura narrativa actualiza una copia transaccional privada del universo.
+Se conservan los estados más recientes de hasta siete horas con actividad. La
+recuperación comprueba su integridad y crea un universo separado, sin sobrescribir
+el original. Excluye credenciales y permisos del conector. Las copias automáticas
+residen en la misma base: conserva también una descarga SQLite independiente.
+No añaden servicios de pago. Al abrir una campaña, la conversación muestra el
+final; al leer mensajes anteriores, un botón permite volver sin perder el orden.
+
 ## Conversación, dictado y lectura
 
 «Enviar y narrar» guarda la decisión y pide la respuesta con un solo botón cuando
