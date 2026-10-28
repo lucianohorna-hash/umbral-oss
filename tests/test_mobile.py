@@ -43,6 +43,7 @@ def test_service_worker_caches_only_explicit_public_shell_paths():
         "/static/app.js",
         "/static/auth.js",
         "/static/mobile.js",
+        "/static/voice.js",
         "/static/chatgpt-plan.js",
         "/static/manifest.webmanifest",
         "/static/icon-192.png",
@@ -60,5 +61,5 @@ def test_mobile_revalidates_shell_and_loads_versioned_narration_scripts(tmp_path
     shell=client.get('/')
     assert shell.headers['cache-control'] == 'no-cache'
     for name in ('app.js','chatgpt-plan.js'):
-        assert '/static/'+name+'?v=20261027-mobile2' in shell.text
+        assert '/static/'+name+'?v=20261027-voice1' in shell.text
         assert client.get('/static/'+name).headers['cache-control'] == 'no-cache'
