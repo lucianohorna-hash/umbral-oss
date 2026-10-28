@@ -219,8 +219,8 @@
     },
     {
       "path": "narrative/static/chatgpt-plan.js",
-      "bytes": 10775,
-      "sha256": "7f78f0a03b4bf35fd1e5c7d385734dc76212faa37f339ea6b1593287bdf4881e"
+      "bytes": 10711,
+      "sha256": "6f66fde87360d4654a57a84f418970dd6b0b241041e6a805a0d1bcc15148109a"
     },
     {
       "path": "narrative/static/icon-192.png",
@@ -413,5 +413,5 @@
       "sha256": "9f8a80be4c5088cec7316cd2c9616e5350aec551c0adac27d595dc4f75b493ce"
     }
   ],
-  "review_archive_sha256": "5f4e6b9f2436dd5b8534738911879a7cb80c6ce9048dbf4dff2384fa1bc7f341"
+  "review_archive_sha256": "acc8870a7c136a65b5050e8aff82bc89ff5d2b9b8d7a67b92b5e51b58f7b25e7"
 }
