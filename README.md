@@ -1,5 +1,7 @@
 # Umbral · código abierto
 
+**Versión completa actual:** [Descargar código y pruebas](umbral-source-durable-20261028.zip). El ZIP incluye el manifiesto de sus 102 archivos, la migración y la herramienta de recuperación. Para esta versión, utiliza el ZIP; el árbol de archivos anterior se conserva como referencia.
+
 ## Continuar, recordar y recuperar
 
 La interfaz muestra el estado de guardado y respuesta. Retomar mi historia resume
@@ -152,3 +154,36 @@ consulta su advertencia antes de configurarlas. No apuntes pruebas a tus campañ
 El manifiesto enumera los archivos distribuidos y sus huellas SHA-256; no incluye
 su propia huella. La lista de exclusión y la búsqueda de patrones son controles
 de preparación, no una garantía universal de ausencia de secretos.
+
+
+## Narración persistente y campañas largas
+
+El navegador solicita un trabajo guardado en la base y consulta su estado. Cerrar
+la PWA no cancela la respuesta en el servidor. Al volver, incluso desde otro
+dispositivo, se recupera el recibo de la última intervención pendiente. Un reinicio
+brusco del servidor puede interrumpir una generación: el sistema lo indica y exige
+reintentar, en vez de gastar otra generación sin avisar. Nunca garantiza ejecución
+exactamente una vez si el proveedor y el servidor se interrumpen a la vez.
+
+Jugar carga inicialmente los últimos cinco mensajes. «Ver conversaciones anteriores»
+solicita otros cinco; no se ocultan conversaciones completas ya descargadas. El
+narrador conserva acceso al archivo independiente de esta ventana visual. Las
+vistas de revisión e historial solicitan su información completa al abrirlas.
+
+La respuesta de IA incluye prosa y un contrato estructurado: identidades, rasgos,
+conocimientos utilizados y candidatos citados literalmente. Se contrastan antes de
+mostrar la escena. Las extracciones siguen pendientes de revisión. Estos controles
+no garantizan cero errores semánticos: dependen también de lo que declare el modelo
+sobre su prosa. La evolución del carácter y los cambios de canon siguen trazados.
+
+Los tiempos guardados distinguen memoria, proveedor, verificación y guardado. La
+recuperación automática usa una base por hora y cambios incrementales encadenados,
+evita reescribir toda la historia por cada mensaje y verifica su integridad antes
+de recuperar. Sigue estando en la misma base de datos.
+
+La copia independiente cifrada está preparada en
+`integrations/backup/github-actions.yml`, desactivada por defecto. Requiere una
+clave pública y una autorización exclusiva para descargar archivos cifrados; no
+habilita acceso al canon sin cifrar. La recuperación offline está en
+`tools/recover_encrypted_backup.py`. Nunca publicar la clave privada. Las cuotas de
+GitHub y el presupuesto de gasto deben revisarse antes de habilitar la programación.
