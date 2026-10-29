@@ -37,7 +37,8 @@
   async function api(path,body){
     let response;
     try{response=await fetch('/api'+path,{method:body===undefined?'GET':'POST',headers:body===undefined?{}:{'Content-Type':'application/json','X-CSRF-Token':s.csrf},body:body===undefined?undefined:JSON.stringify(body),cache:'no-store'});}catch(_){throw Error('No se pudo conectar. Tu texto sigue aquí; comprueba que el archivo esté abierto y vuelve a intentar.');}
-    const data=await response.json();
+    let data;
+    try{data=await response.json();}catch(_){const error=Error(response.status===401?'Tu sesión de Umbral caducó. Vuelve a entrar; tu intervención sigue guardada.':'El servidor no pudo completar la conexión. Puede estar despertando; espera un momento y vuelve a intentar la respuesta. Tu intervención sigue guardada.');error.status=response.status;throw error;}
     if(!response.ok){let msg=data.detail||'No se pudo completar la operación.';if(Array.isArray(msg))msg=msg.map(x=>x.loc?.join(' → ')+': '+x.msg).join('\n');else if(typeof msg==='object')msg=msg.message+'\n'+(msg.issues||[]).map(x=>x.message).join('\n');const error=Error(msg);error.status=response.status;throw error;}return data;
   }
   async function bootstrap(preferredU,preferredC){
@@ -75,7 +76,7 @@
     narratorNotice.hidden=s.provider!=='manual';
     narratorNotice.textContent='Sin narrador automático en esta versión: guardar conserva tu intervención, pero no genera una respuesta. La conexión directa con tu plan ChatGPT aún no está habilitada aquí.';
     $('turn-form').querySelector('[type=submit]').textContent=$('turn-role').value==='narrator'?'Guardar borrador':s.provider==='manual'?'Guardar intervención · sin respuesta automática':'Enviar y narrar';
-    $('generate-turn').textContent='Reintentar respuesta';
+    $('generate-turn').textContent=narrating.has(s.cid)?'Esperando respuesta…':'Reintentar respuesta';
     $('turn-form').querySelector('[type=submit]').disabled=!c||s.savingTurn;$('generate-area').hidden=!c||s.provider==='manual';$('provider-label').textContent=s.provider==='manual'?'Narrador automático no conectado':['chatgpt-plan','chatgpt-plan-self-hosted'].includes(s.provider)?'Plan ChatGPT · conexión en panel':'Narrador conectado';renderCastPicker();
     const list=$('turn-list');const reading=window.UmbralScroll?.before();list.replaceChildren();
     if(!s.turns.length)empty(list,c?'Tu primera escena está por comenzar':'Una historia te espera',c?'Escribe la primera decisión de tu personaje. Quedará guardada para continuar cuando quieras.':'Crea una campaña nueva o selecciona una existente.',c?['Escribir mi primera decisión',()=>$('turn-content').focus()]:['Crear campaña',openWizard]);
@@ -235,17 +236,20 @@
       if(!payload.request_id||!Number.isInteger(payload.expected_version))throw Error('receipt');
       if(!raw){const serialized=JSON.stringify(payload);localStorage.setItem(key,serialized);if(localStorage.getItem(key)!==serialized)throw Error('storage');}
     }catch(_){throw Error('No se pudo proteger el envío del narrador en este navegador. No se solicitó una respuesta.');}
+    const started=Date.now();
+    const waiting=setInterval(()=>{const seconds=Math.floor((Date.now()-started)/1000);experience?.stage(cid,'Esperando al narrador · '+seconds+' s. Tu intervención está guardada; no hace falta reenviarla.');},1000);
     try{
+      if(s.cid===cid){$('generate-turn').textContent='Esperando respuesta…';$('generate-turn').disabled=true;}
       experience?.stage(cid,'El narrador está escribiendo… Tu intervención ya está guardada.');
       const result=await api('/campaigns/'+cid+'/generate',payload);
       try{localStorage.removeItem(key);}catch(_){}
       experience?.stage(cid,'Respuesta guardada · escena pendiente de revisión.');
       return result;
     }catch(error){
-      experience?.stage(cid,'Tu intervención está guardada. No se pudo obtener la respuesta; usa Reintentar respuesta.');
+      experience?.stage(cid,'Tu intervención está guardada. No se pudo obtener la respuesta: '+error.message+' Puedes usar Reintentar respuesta.');
       if([400,409,422].includes(error.status)){try{localStorage.removeItem(key);}catch(_){}}
       throw error;
-    }
+    }finally{clearInterval(waiting);}
   }
   function requestNarration(cid){if(narrating.has(cid))return narrating.get(cid);const pending=performNarration(cid).finally(()=>{narrating.delete(cid);if(s.snapshot)renderStory();});narrating.set(cid,pending);return pending;}
   function pendingTurnKey(cid,role,id){return 'turn-pending.'+cid+'.'+role+(id?'.'+id:'');}
@@ -427,7 +431,7 @@
             await refreshSelectedUniverse(uid);
             notify('Tu decisión y la respuesta del narrador están guardadas. La escena queda por revisar.');
           }catch(error){
-            experience?.stage(cid,'Tu decisión está guardada. La respuesta no está disponible; pulsa Reintentar respuesta.');
+            experience?.stage(cid,'Tu decisión está guardada. No se pudo obtener la respuesta: '+error.message+' Puedes usar Reintentar respuesta.');
             notify('Tu decisión sí está guardada. El narrador no pudo responder: '+error.message,true);
           }
         }
