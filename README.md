@@ -1,6 +1,6 @@
 # Umbral · código abierto
 
-**Versión completa actual (incluye corrección del formato JSON):** [Descargar código y pruebas](umbral-source-durable-20261028-v2.zip). Para esta versión utiliza el ZIP, que contiene su manifiesto completo; el árbol anterior se conserva como referencia.
+**Versión completa actual:** [Descargar código y pruebas](umbral-source-continuity-format-v3.zip). Esta versión conserva los datos de extracción defectuosos para revisión sin confundirlos con contradicciones de canon. El ZIP contiene el manifiesto completo; utiliza el ZIP para esta versión.
 
 ## Continuar, recordar y recuperar
 
