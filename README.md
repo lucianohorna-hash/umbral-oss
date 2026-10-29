@@ -1,6 +1,6 @@
 # Umbral · código abierto
 
-**Versión completa actual:** [Descargar código y pruebas](umbral-source-durable-20261028.zip). El ZIP incluye el manifiesto de sus 102 archivos, la migración y la herramienta de recuperación. Para esta versión, utiliza el ZIP; el árbol de archivos anterior se conserva como referencia.
+**Versión completa actual (incluye corrección del formato JSON):** [Descargar código y pruebas](umbral-source-durable-20261028-v2.zip). Para esta versión utiliza el ZIP, que contiene su manifiesto completo; el árbol anterior se conserva como referencia.
 
 ## Continuar, recordar y recuperar
 
