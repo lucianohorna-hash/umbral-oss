@@ -1,6 +1,6 @@
 # Umbral · código abierto
 
-**Versión completa actual:** [Descargar código y pruebas](umbral-source-continuity-format-v3.zip). Esta versión conserva los datos de extracción defectuosos para revisión sin confundirlos con contradicciones de canon. El ZIP contiene el manifiesto completo; utiliza el ZIP para esta versión.
+**Versión completa actual:** [Descargar código y pruebas](umbral-source-provider-diagnostics-v4.zip). Incluye diagnóstico de interrupciones y límites del proveedor sin exponer datos privados. El ZIP contiene el manifiesto completo; utiliza el ZIP para esta versión.
 
 ## Continuar, recordar y recuperar
 
