@@ -1,6 +1,6 @@
 # Umbral · código abierto
 
-**Versión completa actual:** [Descargar código y pruebas](umbral-source-provider-diagnostics-v4.zip). Incluye diagnóstico de interrupciones y límites del proveedor sin exponer datos privados. El ZIP contiene el manifiesto completo; utiliza el ZIP para esta versión.
+**Versión completa actual:** [Descargar código y pruebas](umbral-source-reliability-v5.zip). Incluye reintento temporal limitado, protección frente a respuestas extra y alcance visible de continuidad. El ZIP contiene su manifiesto completo; utiliza el ZIP para esta versión.
 
 ## Continuar, recordar y recuperar
 
@@ -187,3 +187,31 @@ clave pública y una autorización exclusiva para descargar archivos cifrados; n
 habilita acceso al canon sin cifrar. La recuperación offline está en
 `tools/recover_encrypted_backup.py`. Nunca publicar la clave privada. Las cuotas de
 GitHub y el presupuesto de gasto deben revisarse antes de habilitar la programación.
+
+
+## Reintentos y alcance de continuidad
+
+Un fallo temporal reconocido de red o del proveedor permite como máximo un
+reintento automático por recibo, después de una espera breve. El contador se
+conserva en la base, incluso si se recrea el trabajador o se solicita un reintento
+manual. Los límites del plan, los errores de formato, las contradicciones y los
+fallos no clasificados no autorizan esa repetición automática. Un segundo intento
+puede consumir uso adicional del plan; nunca activa facturación de API alternativa.
+Las interrupciones por reinicio del proceso siguen requiriendo una acción explícita.
+
+Una respuesta ya guardada se devuelve al repetir su recibo. Un identificador nuevo
+no permite generar otra respuesta si el último turno no es una decisión confirmada
+del jugador. El botón y la actualización del catálogo respetan esa protección.
+
+La comprobación registra menciones literales de personajes, lugares, objetos y
+detalles conocidos y las compara con los antecedentes declarados por el modelo.
+Señala omisiones, nombres ambiguos y personalidades sin declarar, sin inventar
+conocimientos ni unir fichas. Su alcance puede ser básico, parcial o con referencias
+declaradas contrastadas. Ninguno de esos estados prueba toda la coherencia semántica.
+Las contradicciones estructuradas siguen bloqueadas; las omisiones se muestran para
+revisión sin detener por sí solas una escena válida.
+
+La recuperación de una copia real debe ejecutarse sobre una base nueva y comparar
+cada fila y campo del archivo descifrado con lo restaurado, además de comprobar
+integridad y referencias SQLite. Nunca se utiliza la base activa como destino.
+Las sesiones y concesiones del conector quedan fuera de la copia portátil.
